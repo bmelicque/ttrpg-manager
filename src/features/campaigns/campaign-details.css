@@ -1,0 +1,219 @@
+/* Campaign details page */
+
+.campaign-details-page {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.campaign-details-page>button:first-child {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.9rem;
+    border: 1px solid var(--border-color, #353743);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text-secondary, #b3b6c4);
+    font: inherit;
+    cursor: pointer;
+    transition:
+        background-color 150ms ease,
+        border-color 150ms ease,
+        color 150ms ease;
+}
+
+.campaign-details-page>button:first-child:hover {
+    background: var(--surface-hover, #292b37);
+    border-color: var(--accent-color, #8b7cf6);
+    color: var(--text-primary, #f4f4f8);
+}
+
+.campaign-details-page>button:first-child:focus-visible,
+.campaign-details-page button:focus-visible {
+    outline: 2px solid var(--accent-color, #8b7cf6);
+    outline-offset: 3px;
+}
+
+.campaign-details-page .page-header {
+    margin-bottom: 0.5rem;
+}
+
+.campaign-details-page .page-header h1 {
+    margin: 0.4rem 0;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.15;
+    letter-spacing: -0.04em;
+}
+
+.campaign-details-page .page-header .muted {
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
+}
+
+/* Overview and feature panels */
+
+.campaign-details-page .panel {
+    padding: 1.5rem;
+    border: 1px solid var(--border-color, #30323e);
+    border-radius: 12px;
+    background: var(--surface-color, #1c1e28);
+}
+
+.campaign-details-page .panel h2 {
+    margin: 0 0 1rem;
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+.campaign-details-page .panel p {
+    color: var(--text-secondary, #b3b6c4);
+    line-height: 1.7;
+}
+
+.campaign-details-page .panel p:last-child {
+    margin-bottom: 0;
+}
+
+.campaign-details-page .panel .muted {
+    font-size: 0.875rem;
+}
+
+.campaign-details-page .error-message {
+    padding: 0.85rem 1rem;
+    border: 1px solid #793c48;
+    border-radius: 8px;
+    background: #351f28;
+    color: #ffb9c4;
+    overflow-wrap: anywhere;
+}
+
+/* Responsive layout */
+
+@media (max-width: 640px) {
+    .campaign-details-page {
+        padding: 1.25rem;
+        gap: 1rem;
+    }
+
+    .campaign-details-page .panel {
+        padding: 1.1rem;
+    }
+}
+
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.character-list {
+    display: grid;
+    gap: 0.5rem;
+    padding-left: 1.25rem;
+}
+
+.character-form {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color, #ccc);
+}
+
+.character-form>label,
+.attributes-grid label {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.character-form input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.character-form fieldset {
+    min-width: 0;
+    border: 1px solid var(--border-color, #ccc);
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+.attributes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+@media (max-width: 600px) {
+    .attributes-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+.character-form {
+    display: grid;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color, #303642);
+}
+
+.character-form button:disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+
+/* Attributes */
+.character-form fieldset {
+    min-width: 0;
+    margin: 0;
+    padding: 1rem;
+    border: 1px solid var(--border-color, #303642);
+    border-radius: 0.75rem;
+}
+
+.character-form legend {
+    padding: 0 0.4rem;
+    color: var(--muted-color, #9ca3af);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.attributes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.attributes-grid input {
+    text-align: center;
+    font-weight: 600;
+}
+
+@media (max-width: 600px) {
+    .attributes-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.85rem;
+    }
+
+    .character-form fieldset {
+        padding: 0.75rem;
+    }
+
+    .character-form button[type="submit"] {
+        width: 100%;
+    }
+}

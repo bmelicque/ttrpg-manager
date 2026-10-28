@@ -1,51 +1,61 @@
 import { useState } from "preact/hooks";
-import preactLogo from "./assets/preact.svg";
-import { invoke } from "@tauri-apps/api/core";
-import "./App.css";
+import { AppLayout, type Page } from "./components/Layout";
+import { Campaigns } from "./features/campaigns/Campaigns";
+import { CampaignDetails } from "./features/campaigns/CampaignDetails";
+import { Dashboard } from "./features/dashboard/Dashboard";
+import "./styles.css";
 
-function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+export default function App() {
+    const [page, setPage] = useState<Page>("dashboard");
+    const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(
+        null,
+    );
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
-  }
+    return (
+        <AppLayout page={page} onNavigate={setPage}>
+            {page === "dashboard" && <Dashboard onNavigate={setPage} />}
 
-  return (
-    <main class="container">
-      <h1>Welcome to Tauri + Preact</h1>
+            {page === "campaigns" &&
+                (selectedCampaignId !== null ? (
+                    <CampaignDetails
+                        campaignId={selectedCampaignId}
+                        onBack={() => setSelectedCampaignId(null)}
+                    />
+                ) : (
+                    <Campaigns onOpen={(id) => setSelectedCampaignId(id)} />
+                ))}
 
-      <div class="row">
-        <a href="https://vite.dev" target="_blank">
-          <img src="/vite.svg" class="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" class="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://preactjs.com" target="_blank">
-          <img src={preactLogo} class="logo preact" alt="Preact logo" />
-        </a>
-      </div>
-      <p>Click on the Tauri, Vite, and Preact logos to learn more.</p>
+            {page === "characters" && (
+                <Placeholder
+                    title="Characters"
+                    description="Your characters will live here."
+                />
+            )}
 
-      <form
-        class="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onInput={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
-    </main>
-  );
+            {page === "maps" && (
+                <Placeholder
+                    title="Battle maps"
+                    description="Your maps and tokens will live here."
+                />
+            )}
+        </AppLayout>
+    );
 }
 
-export default App;
+function Placeholder({
+    title,
+    description,
+}: {
+    title: string;
+    description: string;
+}) {
+    return (
+        <div class="page-heading">
+            <div>
+                <p class="eyebrow">WORKSPACE</p>
+                <h1>{title}</h1>
+                <p class="muted">{description}</p>
+            </div>
+        </div>
+    );
+}
