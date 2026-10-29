@@ -3,6 +3,9 @@ import { AppLayout, type Page } from "./components/Layout";
 import { Campaigns } from "./features/campaigns/Campaigns";
 import { CampaignDetails } from "./features/campaigns/CampaignDetails";
 import { Dashboard } from "./features/dashboard/Dashboard";
+import "../shared/styles/base.css";
+import "../shared/styles/buttons.css";
+import "../shared/styles/forms.css";
 import "./styles.css";
 
 export default function App() {

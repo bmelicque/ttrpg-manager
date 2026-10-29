@@ -1,0 +1,201 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Class catalog",
+    "type": "array",
+    "items": {
+        "$ref": "#/$defs/class"
+    },
+    "$defs": {
+        "abilityId": {
+            "type": "string",
+            "enum": [
+                "strength",
+                "dexterity",
+                "constitution",
+                "intelligence",
+                "wisdom",
+                "charisma"
+            ]
+        },
+        "proficiencyRank": {
+            "type": "string",
+            "enum": [
+                "untrained",
+                "trained",
+                "expert",
+                "master",
+                "legendary"
+            ]
+        },
+        "idList": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "minLength": 1
+            },
+            "uniqueItems": true
+        },
+        "rankedProficiency": {
+            "type": "object",
+            "required": [
+                "id",
+                "rank"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "rank": {
+                    "$ref": "#/$defs/proficiencyRank"
+                }
+            },
+            "additionalProperties": false
+        },
+        "class": {
+            "type": "object",
+            "required": [
+                "id",
+                "name",
+                "description",
+                "role",
+                "hitPointsPerLevel",
+                "keyAbilities",
+                "proficiencies",
+                "skills"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "name": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "description": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "hitPointsPerLevel": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "keyAbilities": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/abilityId"
+                    },
+                    "minItems": 1,
+                    "uniqueItems": true
+                },
+                "proficiencies": {
+                    "type": "object",
+                    "required": [
+                        "perception",
+                        "savingThrows"
+                    ],
+                    "properties": {
+                        "perception": {
+                            "$ref": "#/$defs/proficiencyRank"
+                        },
+                        "savingThrows": {
+                            "type": "object",
+                            "required": [
+                                "fortitude",
+                                "reflex",
+                                "will"
+                            ],
+                            "properties": {
+                                "fortitude": {
+                                    "$ref": "#/$defs/proficiencyRank"
+                                },
+                                "reflex": {
+                                    "$ref": "#/$defs/proficiencyRank"
+                                },
+                                "will": {
+                                    "$ref": "#/$defs/proficiencyRank"
+                                }
+                            },
+                            "additionalProperties": false
+                        },
+                        "weapons": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/$defs/rankedProficiency"
+                            }
+                        },
+                        "armor": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/$defs/rankedProficiency"
+                            }
+                        },
+                        "classDc": {
+                            "oneOf": [
+                                {
+                                    "$ref": "#/$defs/proficiencyRank"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ]
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "skills": {
+                    "type": "object",
+                    "required": [
+                        "choices"
+                    ],
+                    "properties": {
+                        "fixed": {
+                            "$ref": "#/$defs/idList"
+                        },
+                        "choices": {
+                            "type": "object",
+                            "required": [
+                                "baseCount",
+                                "abilityModifier"
+                            ],
+                            "properties": {
+                                "baseCount": {
+                                    "type": "integer",
+                                    "minimum": 0
+                                },
+                                "abilityModifier": {
+                                    "$ref": "#/$defs/abilityId"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "featureIds": {
+                    "$ref": "#/$defs/idList"
+                },
+                "subclassIds": {
+                    "$ref": "#/$defs/idList"
+                },
+                "availableFeatIds": {
+                    "$ref": "#/$defs/idList"
+                },
+                "equipmentSuggestions": {
+                    "$ref": "#/$defs/idList"
+                },
+                "quickBuild": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                }
+            },
+            "additionalProperties": false
+        }
+    }
+}

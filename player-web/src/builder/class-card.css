@@ -1,0 +1,75 @@
+/* Carte de classe */
+main .choice-grid--class {
+    grid-template-columns: 1fr;
+}
+
+/* Caractéristiques et points de vie */
+.class-stats {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+
+    margin: 0;
+    padding: 0.875rem 0;
+
+    border-top: 1px solid var(--border, #d7dce2);
+    border-bottom: 1px solid var(--border, #d7dce2);
+}
+
+.class-stats>div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 0;
+}
+
+.class-stats dt {
+    color: var(--text-muted, #64748b);
+    font-size: 0.75rem;
+    line-height: 1.35;
+}
+
+.class-stats dd {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 650;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+
+/* Capacités clés */
+.class-features {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+}
+
+.class-features ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.class-features li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-left: 0.75rem;
+    border-left: 2px solid var(--border, #d7dce2);
+}
+
+.class-features li strong {
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+.class-features li p {
+    color: var(--text-muted, #64748b);
+    font-size: 0.825rem;
+    line-height: 1.45;
+}

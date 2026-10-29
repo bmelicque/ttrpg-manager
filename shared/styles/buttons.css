@@ -1,0 +1,55 @@
+button {
+    align-self: flex-start;
+    margin-top: 1rem;
+    padding: 0.65rem 1rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    background: var(--accent);
+    color: var(--accent-contrast);
+    font-weight: 600;
+    transition:
+        background-color 150ms ease,
+        transform 150ms ease;
+}
+
+button:hover:not(:disabled) {
+    background: var(--accent-hover);
+}
+
+button:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Variante principale */
+.primary-button,
+button[type="submit"] {
+    padding: 0.7rem 1.15rem;
+    background: var(--accent);
+    color: var(--accent-contrast);
+}
+
+.primary-button:hover:not(:disabled),
+button[type="submit"]:hover:not(:disabled) {
+    background: var(--accent-hover);
+}
+
+.primary-button:active:not(:disabled),
+button[type="submit"]:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+/* Bouton secondaire */
+.secondary-button {
+    background: var(--panel);
+    color: var(--text);
+    border-color: var(--border);
+}
+
+.secondary-button:hover:not(:disabled) {
+    background: var(--panel-hover);
+}

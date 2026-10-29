@@ -1,0 +1,132 @@
+[
+    {
+        "id": "bard",
+        "name": "Barde",
+        "description": "Vous êtes un maître des arts, produisant de captivantes représentations capable d'influencer les esprits et d'élever les âmes à de nouveaux niveaux d'héroïsme.",
+        "role": "SOCIAL, SOUTIEN",
+        "hitPointsPerLevel": 8,
+        "keyAttributes": [
+            "charisma"
+        ],
+        "proficiencies": {
+            "perception": "trained",
+            "savingThrows": {
+                "fortitude": "trained",
+                "reflex": "trained",
+                "will": "expert"
+            },
+            "weapons": [
+                {
+                    "id": "simple_weapons",
+                    "rank": "trained"
+                },
+                {
+                    "id": "martial_weapons",
+                    "rank": "trained"
+                },
+                {
+                    "id": "unarmed_strikes",
+                    "rank": "expert"
+                }
+            ],
+            "armor": [
+                {
+                    "id": "light_armor",
+                    "rank": "trained"
+                },
+                {
+                    "id": "unarmored_defense",
+                    "rank": "trained"
+                }
+            ],
+            "classDc": "trained"
+        },
+        "skills": {
+            "fixed": [
+                "occultism",
+                "performance"
+            ],
+            "choices": {
+                "baseCount": 4,
+                "abilityModifier": "intelligence"
+            }
+        },
+        "featureIds": [],
+        "subclassIds": [],
+        "availableFeatIds": [],
+        "equipmentSuggestions": [],
+        "quickBuild": ""
+    },
+    {
+        "id": "warrior",
+        "name": "Guerrier",
+        "description": "Vous êtes un maître incontesté dans le maniement des armes et des techniques de combat.",
+        "role": "COMBAT",
+        "hitPointsPerLevel": 10,
+        "keyAttributes": [
+            "strength",
+            "dexterity"
+        ],
+        "proficiencies": {
+            "perception": "expert",
+            "savingThrows": {
+                "fortitude": "expert",
+                "reflex": "expert",
+                "will": "trained"
+            },
+            "weapons": [
+                {
+                    "id": "simple_weapons",
+                    "rank": "expert"
+                },
+                {
+                    "id": "martial_weapons",
+                    "rank": "expert"
+                },
+                {
+                    "id": "exotic_weapons",
+                    "rank": "trained"
+                },
+                {
+                    "id": "unarmed_strikes",
+                    "rank": "expert"
+                }
+            ],
+            "armor": [
+                {
+                    "id": "light_armor",
+                    "rank": "trained"
+                },
+                {
+                    "id": "medium_armor",
+                    "rank": "trained"
+                },
+                {
+                    "id": "heavy_armor",
+                    "rank": "trained"
+                },
+                {
+                    "id": "unarmored_defense",
+                    "rank": "trained"
+                }
+            ],
+            "classDc": "trained"
+        },
+        "skills": {
+            "fixed": [
+                "athletics"
+            ],
+            "choices": {
+                "baseCount": 3,
+                "abilityModifier": "intelligence"
+            }
+        },
+        "featureIds": [
+            "reactive_strike"
+        ],
+        "subclassIds": [],
+        "availableFeatIds": [],
+        "equipmentSuggestions": [],
+        "quickBuild": ""
+    }
+]
