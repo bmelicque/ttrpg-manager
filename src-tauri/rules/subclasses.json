@@ -1,0 +1,18 @@
+[
+    {
+        "id": "polymath",
+        "classId": "bard",
+        "name": "Touche-à-tout",
+        "description": "Vous vous intéressez à un large éventail de sujets, mais vous ne vous êtes que rarement dédié à l'un d'entre eux et vous ne vous décidez que rarement : vous voulez tout essayer",
+        "role": "",
+        "featureIds": []
+    },
+    {
+        "id": "maestro",
+        "classId": "bard",
+        "name": "Virtuose",
+        "description": "Vous êtes une source d'inspiration pour vos alliés et vous êtes confiant dans vos capacités musicales comme oratoires.",
+        "role": "Offensive",
+        "featureIds": []
+    }
+]

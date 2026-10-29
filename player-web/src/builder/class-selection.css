@@ -73,3 +73,22 @@ main .choice-grid--class {
     font-size: 0.825rem;
     line-height: 1.45;
 }
+
+/* Section de spécialisation */
+.subclass-selection {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border, #d7dce2);
+}
+
+.subclass-selection>h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.2rem;
+    line-height: 1.4;
+}
+
+.subclass-selection>p {
+    margin: 0 0 1rem;
+    color: var(--text-muted, #64748b);
+    line-height: 1.5;
+}

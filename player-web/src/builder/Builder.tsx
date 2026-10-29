@@ -1,6 +1,6 @@
+import { useRules } from "../../../shared/contexts/rules";
 import { useDraft } from "../contexts/useDraft";
 import { useSteps, type Step } from "../contexts/useSteps";
-import { useClasses } from "../hooks/useClasses";
 import ClassSelection from "./ClassSelection";
 import "./creation-page.css";
 
@@ -56,7 +56,7 @@ function Steps() {
         goNext,
         reset,
     } = useSteps();
-    const { classes } = useClasses();
+    const classes = useRules().classes.data;
     const canContinue = currentStep !== "class" || draft.classId !== null;
     const currentStepIndex = orderedSteps.findIndex(
         (step) => step.id === currentStep,
@@ -133,7 +133,7 @@ function Steps() {
                             <div class="summary-row">
                                 <dt>Classe</dt>
                                 <dd>
-                                    {classes.find(
+                                    {classes?.find(
                                         (item) => item.id === draft.classId,
                                     )?.name ?? "À choisir"}
                                 </dd>

@@ -1,18 +1,35 @@
 import { createContext, type ComponentChildren } from "preact";
-import { fetchClasses } from "../../player-web/src/api/rules";
+import { fetchClasses, fetchSublasses } from "../api/rules";
 import { useContext, useEffect, useState } from "preact/hooks";
 import type { Class } from "../schemas/class";
+import type { Subclass } from "../schemas/subclass";
 
-type RulesContextValue = {
-    classes: Class[];
+type FetchedData<T> = {
+    data: T | null;
     loading: boolean;
     error: string | null;
+};
+
+type RulesContextValue = {
+    classes: FetchedData<Class[]>;
+    subclasses: FetchedData<Subclass[]>;
 };
 
 const RulesContext = createContext<RulesContextValue | null>(null);
 
 export function RulesProvider({ children }: { children: ComponentChildren }) {
-    const [classes, setClasses] = useState<Class[]>([]);
+    const classes = useFetch(fetchClasses);
+    const subclasses = useFetch(fetchSublasses);
+
+    return (
+        <RulesContext.Provider value={{ classes, subclasses }}>
+            {children}
+        </RulesContext.Provider>
+    );
+}
+
+function useFetch<T>(fetcher: () => Promise<T>) {
+    const [data, setData] = useState<T | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -21,8 +38,8 @@ export function RulesProvider({ children }: { children: ComponentChildren }) {
 
         (async function () {
             try {
-                const results = await fetchClasses();
-                if (!cancelled) setClasses(results);
+                const results = await fetcher();
+                if (!cancelled) setData(results);
             } catch (err: unknown) {
                 if (!cancelled) {
                     const e =
@@ -39,11 +56,7 @@ export function RulesProvider({ children }: { children: ComponentChildren }) {
         };
     }, []);
 
-    return (
-        <RulesContext.Provider value={{ classes, loading, error }}>
-            {children}
-        </RulesContext.Provider>
-    );
+    return { data, loading, error };
 }
 
 export function useRules() {

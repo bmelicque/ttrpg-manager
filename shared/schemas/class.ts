@@ -36,7 +36,7 @@ export const classSchema = z.object({
         }),
     }),
     // featureIds: ["reactive_strike"],
-    // subclassIds: [],
+    subclassIds: z.array(z.string()),
     // availableFeatIds: [],
     // equipmentSuggestions: [],
     quickBuild: z.string().default(""),

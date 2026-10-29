@@ -1,24 +1,36 @@
 import { useDraft } from "../contexts/useDraft";
-import { useClasses } from "../hooks/useClasses";
 import { type Class } from "../../../shared/schemas/class";
 import { attributeNames } from "../../../shared/rules/attributes";
+import { useRules } from "../../../shared/contexts/rules";
+import type { Subclass } from "../../../shared/schemas/subclass";
 
 export default function ClassSelection() {
     const { draft, dispatch } = useDraft();
-    const { classes, loading, error } = useClasses();
+    const { classes, subclasses } = useRules();
     const selectedClass =
-        classes.find((item) => item.id === draft.classId) ?? null;
-    console.log(selectedClass);
+        classes.data?.find((item) => item.id === draft.classId) ?? null;
+    const availableSubclasses = selectedClass
+        ? (subclasses.data?.filter(
+              (item) => item.classId === selectedClass.id,
+          ) ?? [])
+        : [];
 
-    if (loading) {
+    if (classes.loading) {
         return <p role="status">Chargement des classes…</p>;
     }
-    if (error) {
-        return <p role="alert">Impossible de charger les classes : {error}</p>;
+    if (classes.error) {
+        return (
+            <p role="alert">
+                Impossible de charger les classes : {classes.error}
+            </p>
+        );
     }
-    if (classes.length === 0) {
+    if (classes.data!.length === 0) {
         return <p>Aucune classe n'est disponible pour le moment.</p>;
     }
+
+    const showSubclasses =
+        selectedClass != null && availableSubclasses.length > 0;
 
     return (
         <>
@@ -28,7 +40,7 @@ export default function ClassSelection() {
             </p>
 
             <div class="choice-grid choice-grid--class">
-                {classes.map((item) => (
+                {classes.data!.map((item) => (
                     <ClassItem
                         key={item.id}
                         item={item}
@@ -40,13 +52,13 @@ export default function ClassSelection() {
                 ))}
             </div>
 
-            {/** selectedClass && (
-                <section>
+            {showSubclasses && (
+                <section className="subclass-selection">
                     <h3>Spécialisation</h3>
                     <p>Choisis une spécialisation pour {selectedClass.name}.</p>
 
-                    <div class="option-grid">
-                        {selectedClass.subclasses.map((subclass) => (
+                    <div class="choice-grid">
+                        {availableSubclasses.map((subclass) => (
                             <SubclassItem
                                 key={subclass.id}
                                 item={subclass}
@@ -61,7 +73,7 @@ export default function ClassSelection() {
                         ))}
                     </div>
                 </section>
-            )**/}
+            )}
         </>
     );
 }
@@ -129,21 +141,21 @@ function ClassItem(props: ItemProps<Class>) {
     );
 }
 
-// function SubclassItem(props: ItemProps<SubclassOption>) {
-//     const { item, isSelected, select } = props;
-//     return (
-//         <button
-//             key={item.id}
-//             type="button"
-//             class={`option-card ${isSelected ? "selected" : ""}`}
-//             aria-pressed={isSelected}
-//             onClick={select}
-//         >
-//             <h3>{item.name}</h3>
-//             <p>{item.description}</p>
-//             <span class="option-meta">
-//                 {isSelected ? "✓ Sélectionnée" : "Choisir"}
-//             </span>
-//         </button>
-//     );
-// }
+function SubclassItem(props: ItemProps<Subclass>) {
+    const { item, isSelected, select } = props;
+    return (
+        <button
+            key={item.id}
+            type="button"
+            class={`choice-card ${isSelected ? "selected" : ""}`}
+            aria-pressed={isSelected}
+            onClick={select}
+        >
+            <h3>{item.name}</h3>
+            <p>{item.description}</p>
+            <span class="option-meta">
+                {isSelected ? "✓ Sélectionnée" : "Choisir"}
+            </span>
+        </button>
+    );
+}

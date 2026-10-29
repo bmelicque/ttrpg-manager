@@ -2,13 +2,14 @@ use axum::{Json, Router, extract::State, http::Method, routing::get};
 use std::sync::Arc;
 use tower_http::cors::{Any, CorsLayer};
 
-use crate::rules::classes::ClassDefinition;
-
-const CLASSES_JSON: &str = include_str!("../../rules/classes.json");
+use crate::rules::{
+    classes::ClassDefinition, load_classes, load_subclasses, subclasses::SubclassDefinition,
+};
 
 #[derive(Clone)]
 struct AppState {
     classes: Arc<Vec<ClassDefinition>>,
+    subclasses: Arc<Vec<SubclassDefinition>>,
 }
 
 async fn health() -> &'static str {
@@ -19,11 +20,17 @@ async fn list_classes(State(state): State<AppState>) -> Json<Vec<ClassDefinition
     Json((*state.classes).clone())
 }
 
+async fn list_subclasses(State(state): State<AppState>) -> Json<Vec<SubclassDefinition>> {
+    Json((*state.subclasses).clone())
+}
+
 pub async fn run() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    let classes: Vec<ClassDefinition> = serde_json::from_str(CLASSES_JSON)?;
+    let classes: Vec<ClassDefinition> = load_classes()?;
+    let subclasses: Vec<SubclassDefinition> = load_subclasses()?;
 
     let state = AppState {
         classes: Arc::new(classes),
+        subclasses: Arc::new(subclasses),
     };
 
     let cors = CorsLayer::new()
@@ -34,6 +41,7 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let app = Router::new()
         .route("/api/health", get(health))
         .route("/api/rules/classes", get(list_classes))
+        .route("/api/rules/subclasses", get(list_subclasses))
         .layer(cors)
         .with_state(state);
 
