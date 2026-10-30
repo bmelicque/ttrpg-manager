@@ -1,79 +1,10 @@
 pub mod classes;
+pub mod feats;
 pub mod subclasses;
+mod utils;
 
-use std::collections::HashSet;
-
-use classes::ClassDefinition;
-
-use crate::rules::subclasses::SubclassDefinition;
-
-const CLASSES_JSON: &str = include_str!("../../rules/classes.json");
-
-pub fn load_classes() -> Result<Vec<ClassDefinition>, String> {
-    let classes: Vec<ClassDefinition> = serde_json::from_str(CLASSES_JSON)
-        .map_err(|error| format!("Catalogue des classes JSON invalide : {error}"))?;
-
-    let mut ids = HashSet::with_capacity(classes.len());
-
-    for class in &classes {
-        if !ids.insert(class.id.as_str()) {
-            return Err(format!("Identifiant de classe dupliqué : '{}'", class.id));
-        }
-
-        validate_unique_ids(
-            &class.feature_ids,
-            &format!("features de la classe '{}'", class.id),
-        )?;
-
-        validate_unique_ids(
-            &class.subclass_ids,
-            &format!("sous-classes de la classe '{}'", class.id),
-        )?;
-
-        validate_unique_ids(
-            &class.available_feat_ids,
-            &format!("dons de la classe '{}'", class.id),
-        )?;
-    }
-
-    Ok(classes)
-}
-
-const SUBCLASSES_JSON: &str = include_str!("../../rules/subclasses.json");
-
-pub fn load_subclasses() -> Result<Vec<SubclassDefinition>, String> {
-    let subclasses: Vec<SubclassDefinition> = serde_json::from_str(SUBCLASSES_JSON)
-        .map_err(|error| format!("Catalogue des sous-classes JSON invalide : {error}"))?;
-
-    let mut ids = HashSet::with_capacity(subclasses.len());
-
-    for subclass in &subclasses {
-        if !ids.insert(subclass.id.as_str()) {
-            return Err(format!(
-                "Identifiant de sous-classe dupliqué : '{}'",
-                subclass.id
-            ));
-        }
-
-        if subclass.id.is_empty() || subclass.class_id.is_empty() {
-            return Err(format!(
-                "La sous-classe '{}' doit avoir un identifiant et un classId non vides",
-                subclass.id
-            ));
-        }
-    }
-
-    Ok(subclasses)
-}
-
-fn validate_unique_ids(ids: &[String], context: &str) -> Result<(), String> {
-    let mut seen = HashSet::with_capacity(ids.len());
-
-    for id in ids {
-        if !seen.insert(id.as_str()) {
-            return Err(format!("Identifiant dupliqué '{}' dans {context}", id));
-        }
-    }
-
-    Ok(())
-}
+pub type SkillId = String;
+pub type FeatureId = String;
+pub type SubclassId = String;
+pub type FeatId = String;
+pub type ItemId = String;

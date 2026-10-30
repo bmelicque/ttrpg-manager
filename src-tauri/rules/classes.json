@@ -58,7 +58,7 @@
         "quickBuild": ""
     },
     {
-        "id": "warrior",
+        "id": "fighter",
         "name": "Guerrier",
         "description": "Vous êtes un maître incontesté dans le maniement des armes et des techniques de combat.",
         "role": "COMBAT",
@@ -125,7 +125,6 @@
             "reactive_strike"
         ],
         "subclassIds": [],
-        "availableFeatIds": [],
         "equipmentSuggestions": [],
         "quickBuild": ""
     }

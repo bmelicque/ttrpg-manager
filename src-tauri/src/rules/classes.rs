@@ -1,10 +1,8 @@
+use std::collections::HashSet;
+
 use serde::{Deserialize, Serialize};
 
-pub type SkillId = String;
-pub type FeatureId = String;
-pub type SubclassId = String;
-pub type FeatId = String;
-pub type ItemId = String;
+use crate::rules::{FeatId, FeatureId, ItemId, SkillId, SubclassId, utils::validate_unique_ids};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -120,4 +118,36 @@ pub struct SkillTraining {
 pub struct SkillChoices {
     pub base_count: u8,
     pub ability_modifier: AbilityId,
+}
+
+const CLASSES_JSON: &str = include_str!("../../rules/classes.json");
+
+pub fn load_classes() -> Result<Vec<ClassDefinition>, String> {
+    let classes: Vec<ClassDefinition> = serde_json::from_str(CLASSES_JSON)
+        .map_err(|error| format!("Catalogue des classes JSON invalide : {error}"))?;
+
+    let mut ids = HashSet::with_capacity(classes.len());
+
+    for class in &classes {
+        if !ids.insert(class.id.as_str()) {
+            return Err(format!("Identifiant de classe dupliqué : '{}'", class.id));
+        }
+
+        validate_unique_ids(
+            &class.feature_ids,
+            &format!("features de la classe '{}'", class.id),
+        )?;
+
+        validate_unique_ids(
+            &class.subclass_ids,
+            &format!("sous-classes de la classe '{}'", class.id),
+        )?;
+
+        validate_unique_ids(
+            &class.available_feat_ids,
+            &format!("dons de la classe '{}'", class.id),
+        )?;
+    }
+
+    Ok(classes)
 }

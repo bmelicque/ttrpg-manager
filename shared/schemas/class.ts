@@ -35,9 +35,9 @@ export const classSchema = z.object({
             abilityModifier: z.literal("intelligence"),
         }),
     }),
-    // featureIds: ["reactive_strike"],
+    featureIds: z.array(z.string()),
     subclassIds: z.array(z.string()),
-    // availableFeatIds: [],
+    availableFeatIds: z.array(z.string()),
     // equipmentSuggestions: [],
     quickBuild: z.string().default(""),
 });

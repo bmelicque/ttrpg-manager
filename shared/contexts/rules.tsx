@@ -1,7 +1,8 @@
 import { createContext, type ComponentChildren } from "preact";
-import { fetchClasses, fetchSublasses } from "../api/rules";
 import { useContext, useEffect, useState } from "preact/hooks";
+import { fetchClasses, fetchFeats, fetchSubclasses } from "../api/rules";
 import type { Class } from "../schemas/class";
+import { type Feat } from "../schemas/feat";
 import type { Subclass } from "../schemas/subclass";
 
 type FetchedData<T> = {
@@ -13,16 +14,18 @@ type FetchedData<T> = {
 type RulesContextValue = {
     classes: FetchedData<Class[]>;
     subclasses: FetchedData<Subclass[]>;
+    feats: FetchedData<Feat[]>;
 };
 
 const RulesContext = createContext<RulesContextValue | null>(null);
 
 export function RulesProvider({ children }: { children: ComponentChildren }) {
     const classes = useFetch(fetchClasses);
-    const subclasses = useFetch(fetchSublasses);
+    const subclasses = useFetch(fetchSubclasses);
+    const feats = useFetch(fetchFeats);
 
     return (
-        <RulesContext.Provider value={{ classes, subclasses }}>
+        <RulesContext.Provider value={{ classes, subclasses, feats }}>
             {children}
         </RulesContext.Provider>
     );
@@ -36,20 +39,10 @@ function useFetch<T>(fetcher: () => Promise<T>) {
     useEffect(() => {
         let cancelled = false;
 
-        (async function () {
-            try {
-                const results = await fetcher();
-                if (!cancelled) setData(results);
-            } catch (err: unknown) {
-                if (!cancelled) {
-                    const e =
-                        err instanceof Error ? err.message : "Erreur inconnue";
-                    setError(e);
-                }
-            } finally {
-                setLoading(false);
-            }
-        })();
+        fetcher()
+            .then((results) => cancelled || setData(results))
+            .catch((err: unknown) => cancelled || setError(errorMessage(err)))
+            .finally(() => cancelled || setLoading(false));
 
         return () => {
             cancelled = true;
@@ -57,6 +50,10 @@ function useFetch<T>(fetcher: () => Promise<T>) {
     }, []);
 
     return { data, loading, error };
+}
+
+function errorMessage(err: unknown): string {
+    return err instanceof Error ? err.message : "Erreur inconnue";
 }
 
 export function useRules() {

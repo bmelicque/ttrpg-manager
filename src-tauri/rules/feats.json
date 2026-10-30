@@ -1,0 +1,11 @@
+[
+    {
+        "id": "double_slice",
+        "name": "Double entaille",
+        "description": "**Conditions** Vous maniez une arme de corps-à-corps dans chaque main.\n\nEffectuez une Frappe avec chacune de vos armes sur une même cible.",
+        "kind": {
+            "type": "classFeat",
+            "classId": "fighter"
+        }
+    }
+]

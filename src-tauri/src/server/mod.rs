@@ -3,13 +3,16 @@ use std::sync::Arc;
 use tower_http::cors::{Any, CorsLayer};
 
 use crate::rules::{
-    classes::ClassDefinition, load_classes, load_subclasses, subclasses::SubclassDefinition,
+    classes::{ClassDefinition, load_classes},
+    feats::{FeatDefinition, load_feats},
+    subclasses::{SubclassDefinition, load_subclasses},
 };
 
 #[derive(Clone)]
 struct AppState {
     classes: Arc<Vec<ClassDefinition>>,
     subclasses: Arc<Vec<SubclassDefinition>>,
+    feats: Arc<Vec<FeatDefinition>>,
 }
 
 async fn health() -> &'static str {
@@ -24,13 +27,19 @@ async fn list_subclasses(State(state): State<AppState>) -> Json<Vec<SubclassDefi
     Json((*state.subclasses).clone())
 }
 
+async fn list_feats(State(state): State<AppState>) -> Json<Vec<FeatDefinition>> {
+    Json((*state.feats).clone())
+}
+
 pub async fn run() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let classes: Vec<ClassDefinition> = load_classes()?;
     let subclasses: Vec<SubclassDefinition> = load_subclasses()?;
+    let feats: Vec<FeatDefinition> = load_feats()?;
 
     let state = AppState {
         classes: Arc::new(classes),
         subclasses: Arc::new(subclasses),
+        feats: Arc::new(feats),
     };
 
     let cors = CorsLayer::new()
@@ -42,6 +51,7 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .route("/api/health", get(health))
         .route("/api/rules/classes", get(list_classes))
         .route("/api/rules/subclasses", get(list_subclasses))
+        .route("/api/rules/feats", get(list_feats))
         .layer(cors)
         .with_state(state);
 
