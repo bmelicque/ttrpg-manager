@@ -1,5 +1,7 @@
 pub mod classes;
 pub mod feats;
+pub mod heritages;
+pub mod species;
 pub mod subclasses;
 mod utils;
 

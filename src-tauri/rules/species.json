@@ -1,0 +1,27 @@
+[
+    {
+        "id": "dwarf",
+        "name": "Nain",
+        "description": "Les nains sont un peuple petit et trapu, souvent fier et obstiné.",
+        "hp": 10,
+        "size": "medium",
+        "speeds": {
+            "land": 4
+        },
+        "skills": [
+            "crafting",
+            "religion"
+        ],
+        "attributes": {
+            "free": 1,
+            "fixed": [
+                "constitution",
+                "wisdom"
+            ],
+            "flaws": [
+                "charisma"
+            ]
+        },
+        "heritageIds": []
+    }
+]

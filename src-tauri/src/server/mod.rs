@@ -5,6 +5,8 @@ use tower_http::cors::{Any, CorsLayer};
 use crate::rules::{
     classes::{ClassDefinition, load_classes},
     feats::{FeatDefinition, load_feats},
+    heritages::{HeritageDefinition, load_heritages},
+    species::{SpeciesDefinition, load_species},
     subclasses::{SubclassDefinition, load_subclasses},
 };
 
@@ -13,6 +15,8 @@ struct AppState {
     classes: Arc<Vec<ClassDefinition>>,
     subclasses: Arc<Vec<SubclassDefinition>>,
     feats: Arc<Vec<FeatDefinition>>,
+    species: Arc<Vec<SpeciesDefinition>>,
+    heritages: Arc<Vec<HeritageDefinition>>,
 }
 
 async fn health() -> &'static str {
@@ -31,15 +35,21 @@ async fn list_feats(State(state): State<AppState>) -> Json<Vec<FeatDefinition>> 
     Json((*state.feats).clone())
 }
 
-pub async fn run() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    let classes: Vec<ClassDefinition> = load_classes()?;
-    let subclasses: Vec<SubclassDefinition> = load_subclasses()?;
-    let feats: Vec<FeatDefinition> = load_feats()?;
+async fn list_species(State(state): State<AppState>) -> Json<Vec<SpeciesDefinition>> {
+    Json((*state.species).clone())
+}
 
+async fn list_heritages(State(state): State<AppState>) -> Json<Vec<HeritageDefinition>> {
+    Json((*state.heritages).clone())
+}
+
+pub async fn run() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let state = AppState {
-        classes: Arc::new(classes),
-        subclasses: Arc::new(subclasses),
-        feats: Arc::new(feats),
+        classes: Arc::new(load_classes()?),
+        subclasses: Arc::new(load_subclasses()?),
+        feats: Arc::new(load_feats()?),
+        species: Arc::new(load_species()?),
+        heritages: Arc::new(load_heritages()?),
     };
 
     let cors = CorsLayer::new()
@@ -52,6 +62,8 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .route("/api/rules/classes", get(list_classes))
         .route("/api/rules/subclasses", get(list_subclasses))
         .route("/api/rules/feats", get(list_feats))
+        .route("/api/rules/species", get(list_species))
+        .route("/api/rules/heritages", get(list_heritages))
         .layer(cors)
         .with_state(state);
 

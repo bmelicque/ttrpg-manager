@@ -3,6 +3,7 @@ import { useDraft } from "../contexts/useDraft";
 import { useSteps, type Step } from "../contexts/useSteps";
 import ClassSelection from "./ClassSelection";
 import "./creation-page.css";
+import SpeciesSelection from "./SpeciesSelection";
 
 export default function () {
     const { startingPoint, start } = useSteps();
@@ -94,15 +95,7 @@ function Steps() {
 
                 {currentStep === "class" && <ClassSelection />}
 
-                {currentStep === "species" && (
-                    <>
-                        <p>Choisissons ton espèce et ton héritage.</p>
-                        <div class="empty-state">
-                            <h3>Prochaine étape</h3>
-                            <p>Le catalogue des espèces sera ajouté ici.</p>
-                        </div>
-                    </>
-                )}
+                {currentStep === "species" && <SpeciesSelection />}
 
                 {currentStep === "attributes" && (
                     <p>Répartissons tes six attributs.</p>

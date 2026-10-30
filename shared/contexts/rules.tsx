@@ -1,9 +1,17 @@
 import { createContext, type ComponentChildren } from "preact";
 import { useContext, useEffect, useState } from "preact/hooks";
-import { fetchClasses, fetchFeats, fetchSubclasses } from "../api/rules";
+import {
+    fetchClasses,
+    fetchFeats,
+    fetchSubclasses,
+    fetchSpecies,
+    fetchHeritages,
+} from "../api/rules";
 import type { Class } from "../schemas/class";
-import { type Feat } from "../schemas/feat";
+import type { Feat } from "../schemas/feat";
 import type { Subclass } from "../schemas/subclass";
+import type { Species } from "../schemas/species";
+import type { Heritage } from "../schemas/heritage";
 
 type FetchedData<T> = {
     data: T | null;
@@ -15,6 +23,8 @@ type RulesContextValue = {
     classes: FetchedData<Class[]>;
     subclasses: FetchedData<Subclass[]>;
     feats: FetchedData<Feat[]>;
+    species: FetchedData<Species[]>;
+    heritages: FetchedData<Heritage[]>;
 };
 
 const RulesContext = createContext<RulesContextValue | null>(null);
@@ -23,9 +33,13 @@ export function RulesProvider({ children }: { children: ComponentChildren }) {
     const classes = useFetch(fetchClasses);
     const subclasses = useFetch(fetchSubclasses);
     const feats = useFetch(fetchFeats);
+    const species = useFetch(fetchSpecies);
+    const heritages = useFetch(fetchHeritages);
 
     return (
-        <RulesContext.Provider value={{ classes, subclasses, feats }}>
+        <RulesContext.Provider
+            value={{ classes, subclasses, feats, species, heritages }}
+        >
             {children}
         </RulesContext.Provider>
     );

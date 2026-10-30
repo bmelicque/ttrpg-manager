@@ -18,18 +18,14 @@ pub struct FeatDefinition {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(tag = "type", rename_all = "camelCase")]
+#[serde(tag = "type", content = "id", rename_all = "camelCase")]
 pub enum FeatKind {
     General,
     Skill,
-    #[serde(rename_all = "camelCase")]
-    ClassFeature {
-        class_id: String,
-    },
-    #[serde(rename_all = "camelCase")]
-    ClassFeat {
-        class_id: String,
-    },
+    Class(String),
+    ClassFeature(String),
+    SpeciesFeature(String),
+    HeritageFeature(String),
 }
 
 const FEATS_JSON: &str = include_str!("../../rules/feats.json");

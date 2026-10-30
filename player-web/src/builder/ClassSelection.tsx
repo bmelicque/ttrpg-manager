@@ -96,7 +96,7 @@ function ClassItem(props: ItemProps<Class>) {
             <span class="choice-meta">{item.role}</span>
             <p>{item.description}</p>
 
-            <dl class="class-stats">
+            <dl class="choice-stats">
                 <div>
                     <dt>Points de vie</dt>
                     <dd>{item.hitPointsPerLevel} par niveau</dd>
@@ -257,8 +257,8 @@ function ClassFeatSelector({ selectedClass }: { selectedClass: Class | null }) {
     const availableFeats =
         feats?.filter(
             (item) =>
-                item.kind.type === "classFeat" &&
-                item.kind.classId === selectedClass?.id,
+                item.kind.type === "class" &&
+                item.kind.id === selectedClass?.id,
         ) ?? [];
 
     if (!availableFeats!.length) {

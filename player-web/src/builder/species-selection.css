@@ -1,0 +1,23 @@
+.species-details,
+.heritage-selection {
+    margin-top: 2rem;
+}
+
+.species-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+}
+
+.species-stats dt {
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.species-stats dd {
+    margin: 0.25rem 0 0;
+}
+
+.species-features article {
+    margin-top: 1rem;
+}

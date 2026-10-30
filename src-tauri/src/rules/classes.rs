@@ -18,7 +18,7 @@ pub struct ClassDefinition {
     pub hit_points_per_level: u16,
 
     /// Caractéristiques principales ou recommandées.
-    pub key_attributes: Vec<AbilityId>,
+    pub key_attributes: Vec<AttributeId>,
 
     pub proficiencies: ClassProficiencies,
 
@@ -48,7 +48,7 @@ pub struct ClassDefinition {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub enum AbilityId {
+pub enum AttributeId {
     Strength,
     Dexterity,
     Constitution,
@@ -117,7 +117,7 @@ pub struct SkillTraining {
 #[serde(rename_all = "camelCase")]
 pub struct SkillChoices {
     pub base_count: u8,
-    pub ability_modifier: AbilityId,
+    pub ability_modifier: AttributeId,
 }
 
 const CLASSES_JSON: &str = include_str!("../../rules/classes.json");

@@ -8,12 +8,16 @@ export const featKindSchema = z.discriminatedUnion("type", [
         type: z.literal("skill"),
     }),
     z.object({
-        type: z.literal("classFeature"),
-        classId: z.string(),
+        type: z.literal("class"),
+        id: z.string(),
     }),
     z.object({
-        type: z.literal("classFeat"),
-        classId: z.string(),
+        type: z.literal("classFeature"),
+        id: z.string(),
+    }),
+    z.object({
+        type: z.literal("speciesFeature"),
+        id: z.string(),
     }),
 ]);
 
