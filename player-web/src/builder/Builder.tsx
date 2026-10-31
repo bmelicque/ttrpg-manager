@@ -66,7 +66,7 @@ function Steps() {
 
     const goBack = () => {
         _goBack();
-        dispatch({ type: "reset" });
+        if (stepIndex === 0) dispatch({ type: "reset" });
     };
 
     return (
