@@ -20,6 +20,8 @@ pub struct ClassDefinition {
     /// Caractéristiques principales ou recommandées.
     pub key_attributes: Vec<AttributeId>,
 
+    pub attributes: ClassAttributes,
+
     pub proficiencies: ClassProficiencies,
 
     /// Compétences entraînées à la création.
@@ -44,6 +46,16 @@ pub struct ClassDefinition {
     /// Conseils de création rapide en texte libre.
     #[serde(default)]
     pub quick_build: Option<String>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ClassAttributes {
+    pub strength: i8,
+    pub dexterity: i8,
+    pub constitution: i8,
+    pub intelligence: i8,
+    pub wisdom: i8,
+    pub charisma: i8,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]

@@ -7,8 +7,8 @@ import type { Subclass } from "../../../shared/schemas/subclass";
 import RichText from "../../../shared/components/RichText";
 
 export default function ClassSelection() {
-    const { draft } = useDraft();
     const { classes, feats } = useRules();
+    const { draft } = useDraft();
 
     const selectedClass =
         classes.data?.find((item) => item.id === draft.classId) ?? null;

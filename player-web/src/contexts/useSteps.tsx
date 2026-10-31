@@ -7,7 +7,6 @@ type StartingPoint = "class" | "species";
 const steps = [
     { id: "class", label: "Classe" },
     { id: "species", label: "Espèce" },
-    { id: "attributes", label: "Attributs" },
     { id: "skills", label: "Compétences" },
     { id: "skill-feat", label: "Don de compétence" },
     { id: "equipment", label: "Équipement" },

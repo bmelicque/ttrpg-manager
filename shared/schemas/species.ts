@@ -11,7 +11,10 @@ export const speciesSchema = z.object({
         swim: z.number().int().optional(),
         fly: z.number().int().optional(),
     }),
-    skills: z.array(z.string()).max(2),
+    skills: z.object({
+        fixed: z.array(z.string()).max(2),
+        free: z.number().int().optional(),
+    }),
     attributes: z.object({
         free: z.number().int(),
         fixed: z.array(z.string()).optional(),

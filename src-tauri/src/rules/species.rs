@@ -16,7 +16,7 @@ pub struct SpeciesDefinition {
     pub hp: u16,
     pub size: SpeciesSize,
     pub speeds: SpeciesSpeeds,
-    pub skills: Vec<SkillId>,
+    pub skills: SpeciesSkills,
     pub attributes: SpeciesAttributes,
     pub heritage_ids: Vec<HeritageId>,
 
@@ -42,6 +42,14 @@ pub struct SpeciesSpeeds {
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub fly: Option<u16>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SpeciesSkills {
+    pub fixed: Vec<SkillId>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub free: Option<u8>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -71,13 +79,6 @@ pub fn load_species() -> Result<Vec<SpeciesDefinition>, String> {
 
         if !ids.insert(&item.id) {
             return Err(format!("Identifiant d'espèce dupliqué : {}", item.id));
-        }
-
-        if item.skills.len() > 2 {
-            return Err(format!(
-                "L'espèce {} possède plus de deux compétences",
-                item.id
-            ));
         }
     }
 

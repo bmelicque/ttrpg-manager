@@ -2,6 +2,8 @@ import { createContext } from "preact";
 import type { CharacterDraft } from "../types";
 import { useContext, useReducer } from "preact/hooks";
 import type { PropsWithChildren } from "preact/compat";
+import type { Class } from "../../../shared/schemas/class";
+import type { Species } from "../../../shared/schemas/species";
 
 export const initialDraft: CharacterDraft = {
     name: "",
@@ -155,4 +157,18 @@ export function useDraft() {
     }
 
     return context;
+}
+
+export function getSelectedClass(
+    draft: CharacterDraft,
+    classes: Class[] | null,
+) {
+    return classes?.find((item) => item.id === draft.classId) ?? null;
+}
+
+export function getSelectedSpecies(
+    draft: CharacterDraft,
+    species: Species[] | null,
+) {
+    return species?.find((item) => item.id === draft.speciesId) ?? null;
 }

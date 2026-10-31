@@ -8,10 +8,12 @@
         "speeds": {
             "land": 4
         },
-        "skills": [
-            "crafting",
-            "religion"
-        ],
+        "skills": {
+            "fixed": [
+                "crafting",
+                "religion"
+            ]
+        },
         "attributes": {
             "free": 1,
             "fixed": [

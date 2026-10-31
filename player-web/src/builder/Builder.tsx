@@ -3,6 +3,7 @@ import { useDraft } from "../contexts/useDraft";
 import { useSteps, type Step } from "../contexts/useSteps";
 import ClassSelection from "./ClassSelection";
 import "./creation-page.css";
+import SkillSelection from "./SkillSelection";
 import SpeciesSelection from "./SpeciesSelection";
 
 export default function () {
@@ -97,13 +98,7 @@ function Steps() {
 
                 {currentStep === "species" && <SpeciesSelection />}
 
-                {currentStep === "attributes" && (
-                    <p>Répartissons tes six attributs.</p>
-                )}
-
-                {currentStep === "skills" && (
-                    <p>Choisissons tes compétences.</p>
-                )}
+                {currentStep === "skills" && <SkillSelection />}
 
                 {currentStep === "skill-feat" && (
                     <p>Choisissons un don de compétence adapté.</p>

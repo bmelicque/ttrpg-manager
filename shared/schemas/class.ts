@@ -13,6 +13,14 @@ export const classSchema = z.object({
     role: z.string(),
     hitPointsPerLevel: z.number().int(),
     keyAttributes: z.array(attributeSchema),
+    attributes: z.object({
+        strength: z.number().int(),
+        dexterity: z.number().int(),
+        constitution: z.number().int(),
+        intelligence: z.number().int(),
+        wisdom: z.number().int(),
+        charisma: z.number().int(),
+    }),
     proficiencies: z.object({
         perception: proficiencySchema,
         savingThrows: z.object({

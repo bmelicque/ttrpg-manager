@@ -8,6 +8,14 @@
         "keyAttributes": [
             "charisma"
         ],
+        "attributes": {
+            "strength": 0,
+            "dexterity": 3,
+            "constitution": 1,
+            "intelligence": 1,
+            "wisdom": 0,
+            "charisma": 4
+        },
         "proficiencies": {
             "perception": "trained",
             "savingThrows": {
@@ -64,9 +72,16 @@
         "role": "COMBAT",
         "hitPointsPerLevel": 10,
         "keyAttributes": [
-            "strength",
-            "dexterity"
+            "strength"
         ],
+        "attributes": {
+            "strength": 4,
+            "dexterity": 1,
+            "constitution": 3,
+            "intelligence": 0,
+            "wisdom": 1,
+            "charisma": 0
+        },
         "proficiencies": {
             "perception": "expert",
             "savingThrows": {
