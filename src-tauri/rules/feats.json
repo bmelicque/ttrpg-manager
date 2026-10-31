@@ -1,5 +1,19 @@
 [
     {
+        "id": "acrobatic_performer",
+        "name": "Artiste acrobate",
+        "description": "Vous êtes un acrobate incroyable, captivant le public par vos prouesses. Vous pouvez effectuer un test d'Acrobaties au lieu d'un test de Représentation pour Vous Représenter. Si vous êtes qualifié à la fois en Acrobaties et en Représentation, vous bénéficiez d'un avantage de +1 à ce test.",
+        "kind": {
+            "type": "skill"
+        },
+        "prerequisites": [
+            {
+                "type": "skill",
+                "skillId": "acrobatics"
+            }
+        ]
+    },
+    {
         "id": "double_slice",
         "name": "Double entaille",
         "description": "**Conditions** Vous maniez une arme de corps-à-corps dans chaque main.\n\nEffectuez une Frappe avec chacune de vos armes sur une même cible.",

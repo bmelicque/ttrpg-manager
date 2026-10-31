@@ -4,7 +4,8 @@ import { type Feat } from "../../../shared/schemas/feat";
 import { attributeNames } from "../../../shared/rules/attributes";
 import { useRules } from "../../../shared/contexts/rules";
 import type { Subclass } from "../../../shared/schemas/subclass";
-import RichText from "../../../shared/components/RichText";
+import type { ItemProps } from "./types";
+import { ClassFeatSelector } from "./FeatSelection";
 
 export default function ClassSelection() {
     const { classes, feats } = useRules();
@@ -68,13 +69,6 @@ function ClassSelector({ selected }: { selected: Class | null }) {
         </div>
     );
 }
-
-type ItemProps<Data> = {
-    item: Data;
-    feats: Feat[];
-    isSelected: boolean;
-    select: () => void;
-};
 
 function ClassItem(props: ItemProps<Class>) {
     const { item, feats, isSelected, select } = props;
@@ -235,76 +229,5 @@ function FeatPreview({
                 </span>
             )}
         </div>
-    );
-}
-
-function ClassFeatSelector({ selectedClass }: { selectedClass: Class | null }) {
-    const {
-        feats: { data: feats, loading, error },
-    } = useRules();
-    const { draft, dispatch } = useDraft();
-
-    if (loading) {
-        return <p role="status">Chargement des dons</p>;
-    }
-
-    if (error) {
-        return (
-            <p role="alert">Impossible de charger les dons&nbsp;: {error}</p>
-        );
-    }
-
-    const availableFeats =
-        feats?.filter(
-            (item) =>
-                item.kind.type === "class" &&
-                item.kind.id === selectedClass?.id,
-        ) ?? [];
-
-    if (!availableFeats!.length) {
-        return <></>;
-    }
-
-    return (
-        <section class="subclass-selection">
-            <h3>Don</h3>
-            <p>Choisis un don de {selectedClass!.name}.</p>
-
-            <div class="choice-grid">
-                {availableFeats.map((feat) => (
-                    <FeatItem
-                        key={feat.id}
-                        item={feat}
-                        isSelected={draft.subclassId === feat.id}
-                        select={() =>
-                            dispatch({
-                                type: "select-subclass",
-                                subclassId: feat.id,
-                            })
-                        }
-                    />
-                ))}
-            </div>
-        </section>
-    );
-}
-
-function FeatItem(props: Omit<ItemProps<Feat>, "feats">) {
-    const { item, isSelected, select } = props;
-
-    return (
-        <button
-            type="button"
-            class={`choice-card ${isSelected ? "selected" : ""}`}
-            aria-pressed={isSelected}
-            onClick={select}
-        >
-            <h3>{item.name}</h3>
-            <RichText content={item.description} />
-
-            <span class="option-meta">
-                {isSelected ? "✓ Sélectionné" : "Choisir"}
-            </span>
-        </button>
     );
 }

@@ -100,10 +100,6 @@ function Steps() {
 
                 {currentStep === "skills" && <SkillSelection />}
 
-                {currentStep === "skill-feat" && (
-                    <p>Choisissons un don de compétence adapté.</p>
-                )}
-
                 {currentStep === "equipment" && (
                     <p>Préparons ton équipement.</p>
                 )}

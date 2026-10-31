@@ -5,6 +5,7 @@ import {
     useDraft,
     type AttributeId,
 } from "../contexts/useDraft";
+import { SkillFeatSelector } from "./FeatSelection";
 
 type SkillOption = {
     id: string;
@@ -68,6 +69,10 @@ export default function SkillSelection() {
                     />
                 ))}
             </div>
+            <SkillFeatSelector
+                selectedSkills={selectedSkills}
+                fixedSkills={fixedSkills}
+            />
         </section>
     );
 }

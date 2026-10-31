@@ -8,7 +8,6 @@ const steps = [
     { id: "class", label: "Classe" },
     { id: "species", label: "Espèce" },
     { id: "skills", label: "Compétences" },
-    { id: "skill-feat", label: "Don de compétence" },
     { id: "equipment", label: "Équipement" },
     { id: "summary", label: "Récapitulatif" },
 ] as const;
