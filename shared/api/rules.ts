@@ -4,6 +4,8 @@ import { featSchema } from "../schemas/feat";
 import { heritageSchema } from "../schemas/heritage";
 import { speciesSchema } from "../schemas/species";
 import { subclassSchema } from "../schemas/subclass";
+import { itemSchema } from "../schemas/item";
+import { equipmentKitSchema } from "../schemas/equipment-kit";
 
 const API_URL = `http://${window.location.hostname}:3001`;
 
@@ -27,6 +29,13 @@ export const fetchSpecies = makeFetcher(
 export const fetchHeritages = makeFetcher(
     `${API_URL}/api/rules/heritages`,
     heritageSchema,
+);
+
+export const fetchItems = makeFetcher(`${API_URL}/api/rules/items`, itemSchema);
+
+export const fetchEquipmentKits = makeFetcher(
+    `${API_URL}/api/rules/equipment-kits`,
+    equipmentKitSchema,
 );
 
 function makeFetcher<T extends z.ZodType>(url: string, schema: T) {

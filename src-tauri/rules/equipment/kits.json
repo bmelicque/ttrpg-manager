@@ -1,0 +1,13 @@
+[
+    {
+        "id": "basic-adventurer-kit",
+        "name": "Kit d'aventurier",
+        "description": "L'équipement de base pour partir à l'aventure.",
+        "items": [
+            {
+                "itemId": "rope",
+                "quantity": 1
+            }
+        ]
+    }
+]

@@ -3,6 +3,7 @@ import { useDraft } from "../contexts/useDraft";
 import { useSteps, type Step } from "../contexts/useSteps";
 import ClassSelection from "./ClassSelection";
 import "./creation-page.css";
+import EquipmentSelection from "./EquipmentSelection";
 import SkillSelection from "./SkillSelection";
 import SpeciesSelection from "./SpeciesSelection";
 
@@ -100,9 +101,7 @@ function Steps() {
 
                 {currentStep === "skills" && <SkillSelection />}
 
-                {currentStep === "equipment" && (
-                    <p>Préparons ton équipement.</p>
-                )}
+                {currentStep === "equipment" && <EquipmentSelection />}
 
                 {currentStep === "summary" && (
                     <div class="summary-card">

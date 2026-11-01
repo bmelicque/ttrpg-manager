@@ -1,4 +1,5 @@
 pub mod classes;
+pub mod equipment;
 pub mod feats;
 pub mod heritages;
 pub mod species;

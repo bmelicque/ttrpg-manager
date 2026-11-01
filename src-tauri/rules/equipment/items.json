@@ -1,0 +1,28 @@
+[
+    {
+        "id": "leather_armor",
+        "name": "Armure de cuir",
+        "description": "Composé d'un mélange de cuir bouilli souple et moulé, un ensemble de ce type d'armure offre une certaine protection tout en garantissant une flexibilité maximale.",
+        "price": 200,
+        "kind": {
+            "type": "armor",
+            "categoryId": "light_armor",
+            "acBonus": 1,
+            "dexCap": 4,
+            "strReq": 0,
+            "checkPenalty": -1
+        }
+    },
+    {
+        "id": "rapier",
+        "name": "Rapière",
+        "description": "La rapière est une longue et fine lame perforante, avec une garde en coupe. Elle est prisée de beaucoup en tant qu'arme de duel.",
+        "price": 200,
+        "kind": {
+            "type": "weapon",
+            "categoryId": "martial_weapons",
+            "handsRequired": 1,
+            "damage": "d6P"
+        }
+    }
+]

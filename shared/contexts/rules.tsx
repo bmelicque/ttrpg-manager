@@ -2,16 +2,20 @@ import { createContext, type ComponentChildren } from "preact";
 import { useContext, useEffect, useState } from "preact/hooks";
 import {
     fetchClasses,
+    fetchEquipmentKits,
     fetchFeats,
-    fetchSubclasses,
-    fetchSpecies,
     fetchHeritages,
+    fetchItems,
+    fetchSpecies,
+    fetchSubclasses,
 } from "../api/rules";
 import type { Class } from "../schemas/class";
+import type { EquipmentKit } from "../schemas/equipment-kit";
 import type { Feat } from "../schemas/feat";
-import type { Subclass } from "../schemas/subclass";
-import type { Species } from "../schemas/species";
 import type { Heritage } from "../schemas/heritage";
+import type { Item } from "../schemas/item";
+import type { Species } from "../schemas/species";
+import type { Subclass } from "../schemas/subclass";
 
 type FetchedData<T> = {
     data: T | null;
@@ -25,6 +29,8 @@ type RulesContextValue = {
     feats: FetchedData<Feat[]>;
     species: FetchedData<Species[]>;
     heritages: FetchedData<Heritage[]>;
+    items: FetchedData<Item[]>;
+    equipmentKits: FetchedData<EquipmentKit[]>;
 };
 
 const RulesContext = createContext<RulesContextValue | null>(null);
@@ -35,10 +41,20 @@ export function RulesProvider({ children }: { children: ComponentChildren }) {
     const feats = useFetch(fetchFeats);
     const species = useFetch(fetchSpecies);
     const heritages = useFetch(fetchHeritages);
+    const items = useFetch(fetchItems);
+    const equipmentKits = useFetch(fetchEquipmentKits);
 
     return (
         <RulesContext.Provider
-            value={{ classes, subclasses, feats, species, heritages }}
+            value={{
+                classes,
+                subclasses,
+                feats,
+                species,
+                heritages,
+                items,
+                equipmentKits,
+            }}
         >
             {children}
         </RulesContext.Provider>

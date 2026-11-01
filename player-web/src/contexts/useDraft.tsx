@@ -4,6 +4,10 @@ import { useContext, useReducer } from "preact/hooks";
 import type { PropsWithChildren } from "preact/compat";
 import type { Class } from "../../../shared/schemas/class";
 import type { Species } from "../../../shared/schemas/species";
+import type { InventoryEntry } from "../../../shared/schemas/inventory";
+import type { Item } from "../../../shared/schemas/item";
+
+export const STARTING_EQUIPMENT_BUDGET = 1500;
 
 export const initialDraft: CharacterDraft = {
     name: "",
@@ -22,7 +26,9 @@ export const initialDraft: CharacterDraft = {
     },
     skillIds: [],
     skillFeatId: null,
-    equipmentIds: [],
+    equipment: {
+        inventory: [],
+    },
 };
 
 export type AttributeId = keyof CharacterDraft["attributes"];
@@ -41,7 +47,17 @@ export type DraftAction =
       }
     | { type: "toggle-skill"; skillId: string }
     | { type: "select-skill-feat"; skillFeatId: string | null }
-    | { type: "toggle-equipment"; equipmentId: string };
+    | { type: "add-inventory-entry"; entry: InventoryEntry }
+    | {
+          type: "add-inventory-entries";
+          entries: InventoryEntry[];
+      }
+    | { type: "remove-inventory-entry"; entryId: string }
+    | {
+          type: "set-inventory-quantity";
+          entryId: string;
+          quantity: number;
+      };
 
 export function characterDraftReducer(
     draft: CharacterDraft,
@@ -117,18 +133,71 @@ export function characterDraftReducer(
                 skillFeatId: action.skillFeatId,
             };
 
-        case "toggle-equipment": {
-            const selected = draft.equipmentIds.includes(action.equipmentId);
+        case "add-inventory-entry":
+            return {
+                ...draft,
+                equipment: {
+                    ...draft.equipment,
+                    inventory: [...draft.equipment.inventory, action.entry],
+                },
+            };
+
+        case "add-inventory-entries": {
+            const existingIds = new Set(
+                draft.equipment.inventory.map(({ id }) => id),
+            );
+
+            if (action.entries.some(({ id }) => existingIds.has(id))) {
+                return draft;
+            }
 
             return {
                 ...draft,
-                equipmentIds: selected
-                    ? draft.equipmentIds.filter(
-                          (id) => id !== action.equipmentId,
-                      )
-                    : [...draft.equipmentIds, action.equipmentId],
+                equipment: {
+                    ...draft.equipment,
+                    inventory: [
+                        ...draft.equipment.inventory,
+                        ...action.entries,
+                    ],
+                },
             };
         }
+
+        case "remove-inventory-entry":
+            return {
+                ...draft,
+                equipment: {
+                    ...draft.equipment,
+                    inventory: draft.equipment.inventory.filter(
+                        ({ id }) => id !== action.entryId,
+                    ),
+                },
+            };
+
+        case "set-inventory-quantity":
+            if (action.quantity <= 0) {
+                return {
+                    ...draft,
+                    equipment: {
+                        ...draft.equipment,
+                        inventory: draft.equipment.inventory.filter(
+                            ({ id }) => id !== action.entryId,
+                        ),
+                    },
+                };
+            }
+
+            return {
+                ...draft,
+                equipment: {
+                    ...draft.equipment,
+                    inventory: draft.equipment.inventory.map((entry) =>
+                        entry.id === action.entryId
+                            ? { ...entry, quantity: action.quantity }
+                            : entry,
+                    ),
+                },
+            };
     }
 }
 
@@ -171,4 +240,37 @@ export function getSelectedSpecies(
     species: Species[] | null,
 ) {
     return species?.find((item) => item.id === draft.speciesId) ?? null;
+}
+
+export function computeRemainingBudget(
+    inventory: InventoryEntry[],
+    items: Item[],
+): number {
+    const itemMap = new Map(items.map((item) => [item.id, item]));
+
+    const totalSpent = inventory.reduce((total, entry) => {
+        const item = itemMap.get(entry.itemId);
+
+        if (!item) {
+            throw new Error(
+                `Objet introuvable dans le catalogue : ${entry.itemId}`,
+            );
+        }
+
+        return total + item.price * entry.quantity;
+    }, 0);
+
+    return STARTING_EQUIPMENT_BUDGET - totalSpent;
+}
+
+export function canAffordEntries(
+    inventory: InventoryEntry[],
+    additionalEntries: InventoryEntry[],
+    items: Item[],
+): boolean {
+    const remaining = computeRemainingBudget(inventory, items);
+
+    const additionalCost = computeRemainingBudget(additionalEntries, items);
+
+    return additionalCost <= remaining;
 }

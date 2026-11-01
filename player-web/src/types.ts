@@ -1,3 +1,5 @@
+import { type InventoryEntry } from "../../shared/schemas/inventory";
+
 export interface CharacterDraft {
     name: string;
     level: 1;
@@ -15,5 +17,9 @@ export interface CharacterDraft {
     };
     skillIds: string[];
     skillFeatId: string | null;
-    equipmentIds: string[];
+    equipment: CharacterEquipment;
 }
+
+type CharacterEquipment = {
+    inventory: InventoryEntry[];
+};

@@ -2,6 +2,7 @@
 @import url("./class-selection.css");
 @import url("./species-selection.css");
 @import url("./skill-selection.css");
+@import url("./equipment-selection.css");
 
 /* ---------- Page générale ---------- */
 
@@ -238,6 +239,13 @@
   }
 }
 
+small {
+  margin: 0;
+  color: var(--text-muted, #64748b);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  font-style: italic;
+}
 
 /* ---------- Champs de création ---------- */
 

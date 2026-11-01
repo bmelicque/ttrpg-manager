@@ -7,6 +7,8 @@ use serde::{Deserialize, Serialize};
 use tauri::{AppHandle, Manager};
 use uuid::Uuid;
 
+use crate::rules::ItemId;
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Character {
@@ -76,6 +78,14 @@ pub enum ProficiencyRank {
     Expert,
     Master,
     Legendary,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct InventoryEntry {
+    pub id: String,
+    pub item_id: ItemId,
+    pub quantity: u32,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

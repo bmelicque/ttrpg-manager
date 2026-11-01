@@ -4,6 +4,10 @@ use tower_http::cors::{Any, CorsLayer};
 
 use crate::rules::{
     classes::{ClassDefinition, load_classes},
+    equipment::{
+        items::{ItemDefinition, load_items},
+        kits::{EquipmentKit, load_kits},
+    },
     feats::{FeatDefinition, load_feats},
     heritages::{HeritageDefinition, load_heritages},
     species::{SpeciesDefinition, load_species},
@@ -17,6 +21,8 @@ struct AppState {
     feats: Arc<Vec<FeatDefinition>>,
     species: Arc<Vec<SpeciesDefinition>>,
     heritages: Arc<Vec<HeritageDefinition>>,
+    items: Arc<Vec<ItemDefinition>>,
+    equipment_kits: Arc<Vec<EquipmentKit>>,
 }
 
 async fn health() -> &'static str {
@@ -43,6 +49,14 @@ async fn list_heritages(State(state): State<AppState>) -> Json<Vec<HeritageDefin
     Json((*state.heritages).clone())
 }
 
+async fn list_items(State(state): State<AppState>) -> Json<Vec<ItemDefinition>> {
+    Json((*state.items).clone())
+}
+
+async fn list_equipment_kits(State(state): State<AppState>) -> Json<Vec<EquipmentKit>> {
+    Json((*state.equipment_kits).clone())
+}
+
 pub async fn run() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let state = AppState {
         classes: Arc::new(load_classes()?),
@@ -50,6 +64,8 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         feats: Arc::new(load_feats()?),
         species: Arc::new(load_species()?),
         heritages: Arc::new(load_heritages()?),
+        items: Arc::new(load_items()?),
+        equipment_kits: Arc::new(load_kits()?),
     };
 
     let cors = CorsLayer::new()
@@ -64,6 +80,8 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .route("/api/rules/feats", get(list_feats))
         .route("/api/rules/species", get(list_species))
         .route("/api/rules/heritages", get(list_heritages))
+        .route("/api/rules/items", get(list_items))
+        .route("/api/rules/equipment-kits", get(list_equipment_kits))
         .layer(cors)
         .with_state(state);
 
