@@ -62,7 +62,10 @@
         "featureIds": [],
         "subclassIds": [],
         "availableFeatIds": [],
-        "equipmentSuggestions": [],
+        "equipmentSuggestions": [
+            "rapier",
+            "leather_armor"
+        ],
         "quickBuild": ""
     },
     {
@@ -140,7 +143,13 @@
             "reactive_strike"
         ],
         "subclassIds": [],
-        "equipmentSuggestions": [],
+        "equipmentSuggestions": [
+            "breastplate",
+            "dagger",
+            "longsword",
+            "glaive",
+            "wooden_shield"
+        ],
         "quickBuild": ""
     }
 ]

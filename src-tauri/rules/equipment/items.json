@@ -1,5 +1,48 @@
 [
     {
+        "id": "breastplate",
+        "name": "Cuirasse",
+        "description": "Ce type d'armure se compose de plusieurs éléments d'armure en plaques ou en demi-plaques qui protègent le torse, la poitrine, le cou, et parfois les hanches ainsi que le bas des jambes.",
+        "price": 800,
+        "kind": {
+            "type": "armor",
+            "categoryId": "medium_armor",
+            "acBonus": 4,
+            "dexCap": 1,
+            "strReq": 3,
+            "checkPenalty": -2
+        }
+    },
+    {
+        "id": "dagger",
+        "name": "Dague",
+        "description": "Cette petite arme dotée d'une lame se tient d'une seule main et sert à poignarder une créature au corps à corps. Elle peut également être lancée.",
+        "price": 20,
+        "kind": {
+            "type": "weapon",
+            "categoryId": "simple_weapons",
+            "handsRequired": 1,
+            "damage": "1d4 P ou T",
+            "agile": true,
+            "finesse": true,
+            "thrown": 2
+        }
+    },
+    {
+        "id": "glaive",
+        "name": "Pertuisane",
+        "description": "Cette arme d'hast se compose d'une longue lame fixée à l'extrémité d'une hampe de 2 mètres. Elle est extrêmement efficace pour porter des coups tranchants mortels à distance.",
+        "price": 100,
+        "kind": {
+            "type": "weapon",
+            "categoryId": "martial_weapons",
+            "handsRequired": 2,
+            "damage": "1d8 T",
+            "deadly": true,
+            "reach": true
+        }
+    },
+    {
         "id": "leather_armor",
         "name": "Armure de cuir",
         "description": "Composé d'un mélange de cuir bouilli souple et moulé, un ensemble de ce type d'armure offre une certaine protection tout en garantissant une flexibilité maximale.",
@@ -14,6 +57,18 @@
         }
     },
     {
+        "id": "longsword",
+        "name": "Épée longue",
+        "description": "Les épées longues peuvent être à un ou deux tranchants. Leurs lames sont lourdes et mesurent environ 1 mètre de long.",
+        "price": 100,
+        "kind": {
+            "type": "weapon",
+            "categoryId": "martial_weapons",
+            "handsRequired": 1,
+            "damage": "1d8 P ou T"
+        }
+    },
+    {
         "id": "rapier",
         "name": "Rapière",
         "description": "La rapière est une longue et fine lame perforante, avec une garde en coupe. Elle est prisée de beaucoup en tant qu'arme de duel.",
@@ -22,7 +77,24 @@
             "type": "weapon",
             "categoryId": "martial_weapons",
             "handsRequired": 1,
-            "damage": "d6P"
+            "damage": "1d6 P",
+            "finesse": true,
+            "deadly": true,
+            "disarm": true
+        }
+    },
+    {
+        "id": "wooden_shield",
+        "name": "Bouclier en bois",
+        "description": "Bien qu'ils se déclinent en une grande variété de formes et de tailles, la protection offerte par les boucliers en bois repose sur la robustesse des matériaux qui les composent.",
+        "price": 100,
+        "kind": {
+            "type": "weapon",
+            "categoryId": "martial_weapons",
+            "handsRequired": 1,
+            "damage": "1d4 C",
+            "agile": true,
+            "ac": 2
         }
     }
 ]

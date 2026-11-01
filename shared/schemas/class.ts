@@ -46,7 +46,7 @@ export const classSchema = z.object({
     featureIds: z.array(z.string()),
     subclassIds: z.array(z.string()),
     availableFeatIds: z.array(z.string()),
-    // equipmentSuggestions: [],
+    equipmentSuggestions: z.array(z.string()).default([]),
     quickBuild: z.string().default(""),
 });
 

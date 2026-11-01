@@ -2,7 +2,12 @@ import z from "zod";
 
 export const weaponSchema = z.object({
     type: z.literal("weapon"),
-    categoryId: z.string(),
+    categoryId: z.enum([
+        "simple_weapons",
+        "martial_weapons",
+        "exotic_weapons",
+        "unarmed_strikes",
+    ]),
     handsRequired: z.union([z.literal(1), z.literal(2)]),
     damage: z.string(),
 });

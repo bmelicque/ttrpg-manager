@@ -9,6 +9,7 @@ import {
 } from "../contexts/useDraft";
 import type { Dispatch } from "preact/hooks";
 import { useRules } from "../../../shared/contexts/rules";
+import { useSteps } from "../contexts/useSteps";
 
 export default function EquipmentSelection() {
     const { items: _items, equipmentKits: _equipmentKits } = useRules();
@@ -17,6 +18,7 @@ export default function EquipmentSelection() {
     const loading = _items.loading || _equipmentKits.loading;
     const error = _items.error || _equipmentKits.error;
     const { draft, dispatch } = useDraft();
+    const weapons = useWeapons(items ?? []);
     if (loading) return <p role="status">Chargement des objets…</p>;
     if (error)
         return <p role="alert">Impossible de charger les objets : {error}</p>;
@@ -25,7 +27,6 @@ export default function EquipmentSelection() {
     const inventory = draft.equipment.inventory;
     const remainingBudget = computeRemainingBudget(inventory, items);
 
-    const weapons = items.filter((item) => item.kind.type === "weapon");
     const armors = items.filter((item) => item.kind.type === "armor");
     const otherItems = items.filter(
         (item) => item.kind.type === "gear" || item.kind.type === "consumable",
@@ -44,6 +45,8 @@ export default function EquipmentSelection() {
                 </div>
             </header>
 
+            <QuickBuild />
+
             <EquipmentSection
                 title="Armes"
                 sectionItems={weapons}
@@ -58,7 +61,6 @@ export default function EquipmentSelection() {
                 remainingBudget={remainingBudget}
                 dispatch={dispatch}
             />
-
             <section class="equipment-section">
                 <h3>Autres équipements</h3>
 
@@ -85,6 +87,45 @@ export default function EquipmentSelection() {
                     dispatch={dispatch}
                 />
             </section>
+        </div>
+    );
+}
+
+function useWeapons(items: Item[]): Item[] {
+    const classes = useRules().classes.data ?? [];
+    const { draft } = useDraft();
+    const class_ = classes.find((c) => c.id === draft.classId);
+    if (!class_) return [];
+    const proficiencies = class_.proficiencies.weapons.map((w) => w.id);
+    return items.filter(
+        (item) =>
+            item.kind.type === "weapon" &&
+            proficiencies.includes(item.kind.categoryId),
+    );
+}
+
+function QuickBuild() {
+    const { classes } = useRules();
+    const { draft, dispatch } = useDraft();
+    const { goNext } = useSteps();
+    const selectedClass = classes.data?.find((c) => c.id === draft.classId);
+    const suggestion = selectedClass?.equipmentSuggestions;
+    if (!suggestion?.length) return <></>;
+    const onClick = () => {
+        dispatch({
+            type: "add-inventory-entries",
+            entries: suggestion.map((s) => ({
+                id: crypto.randomUUID(),
+                itemId: s,
+                quantity: 1,
+            })),
+        });
+        goNext();
+    };
+    return (
+        <div className="equipment-quick">
+            <p>Pas envie de réflechir&nbsp;? </p>
+            <button onClick={onClick}>Prendre le kit par défaut</button>
         </div>
     );
 }
