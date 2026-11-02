@@ -6,14 +6,15 @@ import {
     type AttributeId,
 } from "../contexts/useDraft";
 import { SkillFeatSelector } from "./FeatSelection";
+import { useAttributes } from "./useAttributes";
 
-type SkillOption = {
+export type SkillOption = {
     id: string;
     name: string;
     attribute: AttributeId;
 };
 
-const skills: SkillOption[] = [
+export const skills: SkillOption[] = [
     { id: "acrobatics", name: "Acrobaties", attribute: "dexterity" },
     { id: "arcana", name: "Arcanes", attribute: "intelligence" },
     { id: "athletics", name: "Athlétisme", attribute: "strength" },
@@ -122,11 +123,8 @@ const attributeOrder: AttributeId[] = [
 ];
 
 function AttributePreview() {
-    const { draft } = useDraft();
-    const classes = useRules().classes.data;
-    const class_ = getSelectedClass(draft, classes);
-    if (!class_) return <></>;
-    const attributes = class_?.attributes;
+    const attributes = useAttributes();
+    if (!attributes) return <></>;
     return (
         <section class="attribute-preview">
             <dl class="attribute-grid">
@@ -162,11 +160,9 @@ type SkillButtonProps = {
 };
 function SkillButton(props: SkillButtonProps) {
     const { skill, selectedSkills, fixedSkills, remaining } = props;
-    const { draft, dispatch } = useDraft();
-    const classes = useRules().classes.data;
-    const class_ = getSelectedClass(draft, classes);
-    if (!class_) return <></>;
-    const attributes = class_.attributes;
+    const { dispatch } = useDraft();
+    const attributes = useAttributes();
+    if (!attributes) return <></>;
     const isFixed = fixedSkills.has(skill.id);
     const isSelected = selectedSkills.includes(skill.id);
     const isDisabled = isFixed || (!isSelected && !remaining);

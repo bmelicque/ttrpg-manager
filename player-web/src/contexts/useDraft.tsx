@@ -17,14 +17,6 @@ export const initialDraft: CharacterDraft = {
     subclassId: null,
     speciesId: null,
     heritageId: null,
-    attributes: {
-        strength: 10,
-        dexterity: 10,
-        constitution: 10,
-        intelligence: 10,
-        wisdom: 10,
-        charisma: 10,
-    },
     skillIds: [],
     skillFeatId: null,
     equipment: {
@@ -32,7 +24,13 @@ export const initialDraft: CharacterDraft = {
     },
 };
 
-export type AttributeId = keyof CharacterDraft["attributes"];
+export type AttributeId =
+    | "strength"
+    | "dexterity"
+    | "constitution"
+    | "intelligence"
+    | "wisdom"
+    | "charisma";
 
 export type DraftAction =
     | { type: "reset" }
@@ -42,11 +40,6 @@ export type DraftAction =
     | { type: "select-subclass"; subclassId: string | null }
     | { type: "select-species"; speciesId: string }
     | { type: "select-heritage"; heritageId: string | null }
-    | {
-          type: "set-attribute";
-          attribute: AttributeId;
-          value: number;
-      }
     | { type: "toggle-skill"; skillId: string }
     | { type: "select-skill-feat"; skillFeatId: string | null }
     | { type: "add-inventory-entry"; entry: InventoryEntry }
@@ -113,15 +106,6 @@ export function characterDraftReducer(
             return {
                 ...draft,
                 heritageId: action.heritageId,
-            };
-
-        case "set-attribute":
-            return {
-                ...draft,
-                attributes: {
-                    ...draft.attributes,
-                    [action.attribute]: action.value,
-                },
             };
 
         case "toggle-skill": {

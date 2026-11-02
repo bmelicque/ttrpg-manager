@@ -1,6 +1,6 @@
-import { useRules } from "../../../shared/contexts/rules";
 import { useDraft } from "../contexts/useDraft";
 import { useSteps, type Step } from "../contexts/useSteps";
+import { CharacterSummary } from "./CharacterSummary";
 import ClassSelection from "./ClassSelection";
 import "./creation-page.css";
 import EquipmentSelection from "./EquipmentSelection";
@@ -60,7 +60,6 @@ function Steps() {
         goNext,
         reset,
     } = useSteps();
-    const classes = useRules().classes.data;
     const canContinue = currentStep !== "class" || draft.classId !== null;
     const currentStepIndex = orderedSteps.findIndex(
         (step) => step.id === currentStep,
@@ -106,46 +105,7 @@ function Steps() {
 
                 {currentStep === "identity" && <IdentitySelection />}
 
-                {currentStep === "summary" && (
-                    <div class="summary-card">
-                        <h3>Ton personnage</h3>
-
-                        <dl class="summary-list">
-                            <div class="summary-row">
-                                <dt>Niveau</dt>
-                                <dd>{draft.level}</dd>
-                            </div>
-
-                            <div class="summary-row">
-                                <dt>Classe</dt>
-                                <dd>
-                                    {classes?.find(
-                                        (item) => item.id === draft.classId,
-                                    )?.name ?? "À choisir"}
-                                </dd>
-                            </div>
-
-                            {/* <div class="summary-row">
-                                <dt>Spécialisation</dt>
-                                <dd>
-                                    {classes
-                                        .find(
-                                            (item) => item.id === draft.classId,
-                                        )
-                                        ?.subclasses.find(
-                                            (item) =>
-                                                item.id === draft.subclassId,
-                                        )?.name ?? "À choisir"}
-                                </dd>
-                            </div> */}
-
-                            <div class="summary-row">
-                                <dt>Espèce</dt>
-                                <dd>{draft.speciesId ?? "À choisir"}</dd>
-                            </div>
-                        </dl>
-                    </div>
-                )}
+                {currentStep === "summary" && <CharacterSummary />}
 
                 <div class="step-actions">
                     <button

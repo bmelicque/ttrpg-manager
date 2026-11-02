@@ -432,58 +432,6 @@ small {
   line-height: 1.55;
 }
 
-/* ---------- Récapitulatif ---------- */
-
-.character-summary {
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 2fr);
-  gap: 24px;
-}
-
-.summary-card {
-  min-width: 0;
-  padding: 20px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--sidebar);
-}
-
-.summary-card h3 {
-  margin: 0 0 16px;
-}
-
-.summary-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin: 0;
-}
-
-.summary-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--border);
-}
-
-.summary-row:last-child {
-  padding-bottom: 0;
-  border-bottom: 0;
-}
-
-.summary-row dt {
-  color: var(--muted);
-  font-size: 0.875rem;
-}
-
-.summary-row dd {
-  margin: 0;
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-align: right;
-  overflow-wrap: anywhere;
-}
 
 /* ---------- Navigation entre les étapes ---------- */
 
