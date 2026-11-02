@@ -9,6 +9,7 @@ const steps = [
     { id: "species", label: "Espèce" },
     { id: "skills", label: "Compétences" },
     { id: "equipment", label: "Équipement" },
+    { id: "identity", label: "Identité" },
     { id: "summary", label: "Récapitulatif" },
 ] as const;
 

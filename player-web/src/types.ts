@@ -2,6 +2,7 @@ import { type InventoryEntry } from "../../shared/schemas/inventory";
 
 export interface CharacterDraft {
     name: string;
+    biography: string;
     level: 1;
     classId: string | null;
     subclassId: string | null;

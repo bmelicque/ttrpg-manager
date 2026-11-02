@@ -11,6 +11,7 @@ export const STARTING_EQUIPMENT_BUDGET = 1500;
 
 export const initialDraft: CharacterDraft = {
     name: "",
+    biography: "",
     level: 1,
     classId: null,
     subclassId: null,
@@ -36,6 +37,7 @@ export type AttributeId = keyof CharacterDraft["attributes"];
 export type DraftAction =
     | { type: "reset" }
     | { type: "set-name"; name: string }
+    | { type: "set-biography"; biography: string }
     | { type: "select-class"; classId: string }
     | { type: "select-subclass"; subclassId: string | null }
     | { type: "select-species"; speciesId: string }
@@ -71,6 +73,12 @@ export function characterDraftReducer(
             return {
                 ...draft,
                 name: action.name,
+            };
+
+        case "set-biography":
+            return {
+                ...draft,
+                biography: action.biography,
             };
 
         case "select-class":

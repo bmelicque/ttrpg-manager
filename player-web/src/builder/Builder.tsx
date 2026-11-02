@@ -4,6 +4,7 @@ import { useSteps, type Step } from "../contexts/useSteps";
 import ClassSelection from "./ClassSelection";
 import "./creation-page.css";
 import EquipmentSelection from "./EquipmentSelection";
+import { IdentitySelection } from "./IdentitySelection";
 import SkillSelection from "./SkillSelection";
 import SpeciesSelection from "./SpeciesSelection";
 
@@ -103,6 +104,8 @@ function Steps() {
 
                 {currentStep === "equipment" && <EquipmentSelection />}
 
+                {currentStep === "identity" && <IdentitySelection />}
+
                 {currentStep === "summary" && (
                     <div class="summary-card">
                         <h3>Ton personnage</h3>
@@ -188,7 +191,7 @@ function StepBadge({ step, index, current }: StepBadgeProps) {
             aria-current={index === current ? "step" : undefined}
         >
             <span class="step-number">{index < current ? "✓" : index + 1}</span>
-            <small class="step-label">{step.label}</small>
+            <p class="step-label">{step.label}</p>
         </div>
     );
 }
