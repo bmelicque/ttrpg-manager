@@ -1,14 +1,15 @@
-import type { Item } from "../../../shared/schemas/item";
-import type { EquipmentKit } from "../../../shared/schemas/equipment-kit";
-import type { InventoryEntry } from "../../../shared/schemas/inventory";
-import {
-    useDraft,
-    computeRemainingBudget,
-    STARTING_EQUIPMENT_BUDGET,
-    type DraftAction,
-} from "../contexts/useDraft";
 import type { Dispatch } from "preact/hooks";
 import { useRules } from "../../../shared/contexts/rules";
+import { formatMoney } from "../../../shared/rules/money";
+import type { EquipmentKit } from "../../../shared/schemas/equipment-kit";
+import type { InventoryEntry } from "../../../shared/schemas/inventory";
+import type { Item } from "../../../shared/schemas/item";
+import {
+    computeRemainingBudget,
+    STARTING_EQUIPMENT_BUDGET,
+    useDraft,
+    type DraftAction,
+} from "../contexts/useDraft";
 import { useSteps } from "../contexts/useSteps";
 
 export default function EquipmentSelection() {
@@ -336,16 +337,4 @@ function KitView(props: {
             </button>
         </article>
     );
-}
-
-function formatMoney(money: number): string {
-    const coins = [];
-    const gold = Math.floor(money / 100);
-    if (gold > 0) coins.push(`${gold} po`);
-    money -= gold * 100;
-    const silver = Math.floor(money / 10);
-    if (silver > 0) coins.push(`${silver} pa`);
-    money -= silver * 10;
-    if (money > 0) coins.push(`${money} pc`);
-    return coins.join(" ");
 }

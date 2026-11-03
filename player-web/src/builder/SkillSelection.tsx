@@ -14,7 +14,7 @@ export type SkillOption = {
     attribute: AttributeId;
 };
 
-export const skills: SkillOption[] = [
+export const skills = [
     { id: "acrobatics", name: "Acrobaties", attribute: "dexterity" },
     { id: "arcana", name: "Arcanes", attribute: "intelligence" },
     { id: "athletics", name: "Athlétisme", attribute: "strength" },
@@ -28,10 +28,10 @@ export const skills: SkillOption[] = [
     { id: "performance", name: "Représentation", attribute: "charisma" },
     { id: "religion", name: "Religion", attribute: "wisdom" },
     { id: "society", name: "Société", attribute: "intelligence" },
-    { id: "stealth", name: "Stealth", attribute: "dexterity" },
+    { id: "stealth", name: "Discrétion", attribute: "dexterity" },
     { id: "survival", name: "Survie", attribute: "wisdom" },
-    { id: "thievery", name: "Thievery", attribute: "dexterity" },
-];
+    { id: "thievery", name: "Larcin", attribute: "dexterity" },
+].sort((a, b) => a.name.localeCompare(b.name)) as SkillOption[];
 
 export default function SkillSelection() {
     const { draft } = useDraft();

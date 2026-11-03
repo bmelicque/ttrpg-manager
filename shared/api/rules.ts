@@ -7,7 +7,7 @@ import { subclassSchema } from "../schemas/subclass";
 import { itemSchema } from "../schemas/item";
 import { equipmentKitSchema } from "../schemas/equipment-kit";
 
-const API_URL = `http://${window.location.hostname}:3001`;
+export const API_URL = `http://${window.location.hostname}:3001`;
 
 export const fetchClasses = makeFetcher(
     `${API_URL}/api/rules/classes`,

@@ -31,9 +31,11 @@ pub struct Character {
 
     // Progression du personnage
     pub skills: Vec<SkillSelection>,
-    pub skill_feats: Vec<FeatSelection>,
-    pub class_feats: Vec<FeatSelection>,
+    pub feats: Vec<FeatSelection>,
     pub spells: Vec<SpellSelection>,
+
+    // Équipement
+    pub inventory: Vec<InventoryEntry>,
 
     // État courant
     pub state: CharacterState,
@@ -55,12 +57,28 @@ pub struct SkillSelection {
     pub skill_id: String,
     pub proficiency: ProficiencyRank,
 }
+impl SkillSelection {
+    pub fn new(skill_id: String, proficiency: ProficiencyRank) -> Self {
+        Self {
+            skill_id,
+            proficiency,
+        }
+    }
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct FeatSelection {
     pub feat_id: String,
     pub acquired_at_level: u32,
+}
+impl FeatSelection {
+    pub fn new(feat_id: String, acquired_at_level: u32) -> Self {
+        Self {
+            feat_id,
+            acquired_at_level,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -95,27 +113,30 @@ pub struct CharacterState {
     pub current_focus_points: u32,
 }
 
-fn characters_dir(app: &AppHandle, campaign_id: &str) -> Result<PathBuf, String> {
+pub fn characters_dir_from_data_dir(data_dir: &Path, campaign_id: &str) -> Result<PathBuf, String> {
     Uuid::parse_str(campaign_id).map_err(|_| "Identifiant de campagne invalide.".to_string())?;
 
-    let mut path = app
+    let campaign_dir = data_dir.join("campaigns").join(campaign_id);
+
+    if !campaign_dir.join("campaign.json").is_file() {
+        return Err("Campagne introuvable.".to_string());
+    }
+
+    let characters_dir = campaign_dir.join("characters");
+
+    fs::create_dir_all(&characters_dir)
+        .map_err(|e| format!("Impossible de créer le dossier des personnages : {e}"))?;
+
+    Ok(characters_dir)
+}
+
+fn characters_dir(app: &AppHandle, campaign_id: &str) -> Result<PathBuf, String> {
+    let data_dir = app
         .path()
         .app_data_dir()
         .map_err(|e| format!("Impossible de localiser les données : {e}"))?;
 
-    path.push("campaigns");
-    path.push(campaign_id);
-
-    if !path.join("campaign.json").is_file() {
-        return Err("Campagne introuvable.".to_string());
-    }
-
-    path.push("characters");
-
-    fs::create_dir_all(&path)
-        .map_err(|e| format!("Impossible de créer le dossier des personnages : {e}"))?;
-
-    Ok(path)
+    characters_dir_from_data_dir(&data_dir, campaign_id)
 }
 
 fn read_character(path: &Path) -> Result<Character, String> {
@@ -149,51 +170,77 @@ pub fn list_characters(app: AppHandle, campaign_id: String) -> Result<Vec<Charac
     Ok(characters)
 }
 
-#[tauri::command]
-pub fn create_character(
-    app: AppHandle,
-    campaign_id: String,
-    name: String,
-    level: u32,
-    attributes: Attributes,
-    species_id: String,
-    heritage_id: Option<String>,
-    class_id: String,
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CreateCharacterRequest {
+    pub name: String,
+    pub level: u32,
+    pub biography: String,
+
+    pub attributes: Attributes,
+
+    pub species_id: String,
+    pub heritage_id: Option<String>,
+    pub class_id: String,
+    pub subclass_id: Option<String>,
+
+    pub skill_ids: Vec<String>,
+    pub feat_ids: Vec<String>,
+
+    pub inventory: Vec<InventoryEntry>,
+}
+
+pub fn create_character_in_directory(
+    data_dir: &Path,
+    campaign_id: &str,
+    request: CreateCharacterRequest,
 ) -> Result<Character, String> {
-    let name = name.trim().to_owned();
+    let name = request.name.trim().to_owned();
 
     if name.is_empty() {
         return Err("Le nom du personnage est obligatoire.".into());
     }
 
-    if level == 0 {
+    if request.level == 0 {
         return Err("Le niveau doit être supérieur à zéro.".into());
     }
 
-    if species_id.trim().is_empty() || class_id.trim().is_empty() {
+    if request.species_id.trim().is_empty() || request.class_id.trim().is_empty() {
         return Err("L'espèce et la classe sont obligatoires.".into());
     }
 
-    let directory = characters_dir(&app, &campaign_id)?;
+    let directory = characters_dir_from_data_dir(data_dir, campaign_id)?;
     let id = Uuid::new_v4().to_string();
+
+    let skills = request
+        .skill_ids
+        .into_iter()
+        .map(|skill_id| SkillSelection::new(skill_id, ProficiencyRank::Trained))
+        .collect();
+
+    let feats = request
+        .feat_ids
+        .into_iter()
+        .map(|feat_id| FeatSelection::new(feat_id, 1))
+        .collect();
 
     let character = Character {
         schema_version: 1,
         id: id.clone(),
         name,
-        level,
-        biography: String::new(),
+        level: request.level,
+        biography: request.biography,
         portrait: None,
         notes: String::new(),
-        attributes,
-        species_id: species_id.trim().to_owned(),
-        heritage_id,
-        class_id: class_id.trim().to_owned(),
-        subclass_id: None,
-        skills: Vec::new(),
-        skill_feats: Vec::new(),
-        class_feats: Vec::new(),
+        attributes: request.attributes,
+        species_id: request.species_id,
+        heritage_id: request.heritage_id,
+        class_id: request.class_id,
+        subclass_id: request.subclass_id,
+        skills,
+        feats,
         spells: Vec::new(),
+        inventory: request.inventory,
         state: CharacterState {
             current_hp: 0,
             current_focus_points: 0,
@@ -207,6 +254,20 @@ pub fn create_character(
         .map_err(|e| format!("Impossible d'enregistrer le personnage : {e}"))?;
 
     Ok(character)
+}
+
+#[tauri::command]
+pub fn create_character(
+    app: AppHandle,
+    campaign_id: String,
+    request: CreateCharacterRequest,
+) -> Result<Character, String> {
+    let data_dir = app
+        .path()
+        .app_data_dir()
+        .map_err(|e| format!("Impossible de localiser les données : {e}"))?;
+
+    create_character_in_directory(&data_dir, &campaign_id, request)
 }
 
 #[tauri::command]

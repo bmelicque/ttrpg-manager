@@ -1,17 +1,25 @@
-use axum::{Json, Router, extract::State, http::Method, routing::get};
-use std::sync::Arc;
+use axum::{
+    Json, Router,
+    extract::{Path, State},
+    http::{Method, StatusCode},
+    routing::{get, post},
+};
+use std::{path::PathBuf, sync::Arc};
 use tower_http::cors::{Any, CorsLayer};
 
-use crate::rules::{
-    classes::{ClassDefinition, load_classes},
-    equipment::{
-        items::{ItemDefinition, load_items},
-        kits::{EquipmentKit, load_kits},
+use crate::{
+    character::{Character, CreateCharacterRequest, create_character_in_directory},
+    rules::{
+        classes::{ClassDefinition, load_classes},
+        equipment::{
+            items::{ItemDefinition, load_items},
+            kits::{EquipmentKit, load_kits},
+        },
+        feats::{FeatDefinition, load_feats},
+        heritages::{HeritageDefinition, load_heritages},
+        species::{SpeciesDefinition, load_species},
+        subclasses::{SubclassDefinition, load_subclasses},
     },
-    feats::{FeatDefinition, load_feats},
-    heritages::{HeritageDefinition, load_heritages},
-    species::{SpeciesDefinition, load_species},
-    subclasses::{SubclassDefinition, load_subclasses},
 };
 
 #[derive(Clone)]
@@ -23,6 +31,8 @@ struct AppState {
     heritages: Arc<Vec<HeritageDefinition>>,
     items: Arc<Vec<ItemDefinition>>,
     equipment_kits: Arc<Vec<EquipmentKit>>,
+
+    data_dir: PathBuf,
 }
 
 async fn health() -> &'static str {
@@ -57,7 +67,26 @@ async fn list_equipment_kits(State(state): State<AppState>) -> Json<Vec<Equipmen
     Json((*state.equipment_kits).clone())
 }
 
-pub async fn run() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+async fn create_campaign_character(
+    State(state): State<AppState>,
+    Path(campaign_id): Path<String>,
+    Json(request): Json<CreateCharacterRequest>,
+) -> Result<Json<Character>, (StatusCode, String)> {
+    let character =
+        create_character_in_directory(&state.data_dir, &campaign_id, request).map_err(|error| {
+            let status = if error == "Campagne introuvable." {
+                StatusCode::NOT_FOUND
+            } else {
+                StatusCode::BAD_REQUEST
+            };
+
+            (status, error)
+        })?;
+
+    Ok(Json(character))
+}
+
+pub async fn run(data_dir: PathBuf) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let state = AppState {
         classes: Arc::new(load_classes()?),
         subclasses: Arc::new(load_subclasses()?),
@@ -66,6 +95,8 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         heritages: Arc::new(load_heritages()?),
         items: Arc::new(load_items()?),
         equipment_kits: Arc::new(load_kits()?),
+
+        data_dir,
     };
 
     let cors = CorsLayer::new()
@@ -82,6 +113,10 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .route("/api/rules/heritages", get(list_heritages))
         .route("/api/rules/items", get(list_items))
         .route("/api/rules/equipment-kits", get(list_equipment_kits))
+        .route(
+            "/api/campaigns/{campaign_id}/characters",
+            post(create_campaign_character),
+        )
         .layer(cors)
         .with_state(state);
 

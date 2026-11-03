@@ -3,6 +3,7 @@ import "./character-summary.css";
 import { useRules } from "../../../shared/contexts/rules";
 import { skills, type SkillOption } from "./SkillSelection";
 import { useAttributes } from "./useAttributes";
+import { formatMoney } from "../../../shared/rules/money";
 
 const ATTRIBUTE_LABELS: Record<string, string> = {
     strength: "Force",
@@ -45,7 +46,7 @@ export function CharacterSummary() {
         .map((id) => skills.find((skill) => skill.id === id))
         .filter((skill): skill is SkillOption => skill !== undefined);
 
-    const totalCost = computeRemainingBudget(
+    const remainingMoney = computeRemainingBudget(
         draft.equipment.inventory,
         items ?? [],
     );
@@ -165,7 +166,7 @@ export function CharacterSummary() {
                                     </span>
                                     <span class="summary-muted">
                                         {item
-                                            ? `${item.price * entry.quantity} po`
+                                            ? `${formatMoney(item.price * entry.quantity)}`
                                             : "Objet introuvable"}
                                     </span>
                                 </li>
@@ -177,8 +178,8 @@ export function CharacterSummary() {
                 )}
 
                 <div class="summary-equipment-total">
-                    <span>Coût total</span>
-                    <strong>{totalCost} po</strong>
+                    <span>Argent restant</span>
+                    <strong>{formatMoney(remainingMoney)}</strong>
                 </div>
             </section>
         </div>

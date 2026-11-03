@@ -1,3 +1,5 @@
+use tauri::Manager;
+
 mod campaigns;
 mod character;
 mod rules;
@@ -7,9 +9,10 @@ mod server;
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
-        .setup(|_app| {
+        .setup(|app| {
+            let data_dir = app.path().app_data_dir()?;
             tauri::async_runtime::spawn(async {
-                if let Err(error) = server::run().await {
+                if let Err(error) = server::run(data_dir).await {
                     eprintln!("Erreur du serveur HTTP : {error}");
                 }
             });

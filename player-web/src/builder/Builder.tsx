@@ -1,3 +1,4 @@
+import { postCharacter } from "../api/characters";
 import { useDraft } from "../contexts/useDraft";
 import { useSteps, type Step } from "../contexts/useSteps";
 import { CharacterSummary } from "./CharacterSummary";
@@ -7,6 +8,7 @@ import EquipmentSelection from "./EquipmentSelection";
 import { IdentitySelection } from "./IdentitySelection";
 import SkillSelection from "./SkillSelection";
 import SpeciesSelection from "./SpeciesSelection";
+import { useAttributes } from "./useAttributes";
 
 export default function () {
     const { startingPoint, start } = useSteps();
@@ -60,6 +62,7 @@ function Steps() {
         goNext,
         reset,
     } = useSteps();
+    const attributes = useAttributes();
     const canContinue = currentStep !== "class" || draft.classId !== null;
     const currentStepIndex = orderedSteps.findIndex(
         (step) => step.id === currentStep,
@@ -68,6 +71,13 @@ function Steps() {
     const goBack = () => {
         _goBack();
         if (stepIndex === 0) dispatch({ type: "reset" });
+    };
+
+    const post = () => {
+        if (!attributes) return;
+        postCharacter(draft, attributes)
+            .then(() => reset())
+            .catch((e) => console.log(e));
     };
 
     return (
@@ -125,7 +135,7 @@ function Steps() {
                             Continuer
                         </button>
                     ) : (
-                        <button type="button" onClick={reset}>
+                        <button type="button" onClick={post}>
                             Terminer
                         </button>
                     )}
