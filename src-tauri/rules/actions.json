@@ -1,0 +1,32 @@
+[
+    {
+        "id": "swashbuckler_strike",
+        "name": "Frappe assurée",
+        "description": "",
+        "kind": {
+            "type": "strike",
+            "requirements": [
+                {
+                    "type": "type",
+                    "strikeType": "melee"
+                },
+                {
+                    "type": "finesse"
+                }
+            ],
+            "effects": [
+                {
+                    "type": "extraDice",
+                    "count": 1
+                },
+                {
+                    "type": "onFailure",
+                    "effect": {
+                        "type": "extraDice",
+                        "count": 1
+                    }
+                }
+            ]
+        }
+    }
+]

@@ -1,3 +1,6 @@
+pub mod calculated;
+pub mod calculations;
+
 use std::{
     fs,
     path::{Path, PathBuf},
@@ -7,7 +10,7 @@ use serde::{Deserialize, Serialize};
 use tauri::{AppHandle, Manager};
 use uuid::Uuid;
 
-use crate::rules::ItemId;
+use crate::rules::{ItemId, attributes::Attributes, proficiencies::ProficiencyRank};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -36,19 +39,11 @@ pub struct Character {
 
     // Équipement
     pub inventory: Vec<InventoryEntry>,
+    pub main_hand: Option<String>,
+    pub off_hand: Option<String>,
 
     // État courant
     pub state: CharacterState,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Attributes {
-    pub strength: i32,
-    pub dexterity: i32,
-    pub constitution: i32,
-    pub intelligence: i32,
-    pub wisdom: i32,
-    pub charisma: i32,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -86,16 +81,6 @@ impl FeatSelection {
 pub struct SpellSelection {
     pub spell_id: String,
     pub acquired_at_level: u32,
-}
-
-#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
-pub enum ProficiencyRank {
-    Untrained,
-    Trained,
-    Expert,
-    Master,
-    Legendary,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -241,6 +226,8 @@ pub fn create_character_in_directory(
         feats,
         spells: Vec::new(),
         inventory: request.inventory,
+        main_hand: None,
+        off_hand: None,
         state: CharacterState {
             current_hp: 0,
             current_focus_points: 0,
@@ -270,16 +257,14 @@ pub fn create_character(
     create_character_in_directory(&data_dir, &campaign_id, request)
 }
 
-#[tauri::command]
-pub fn get_character(
-    app: AppHandle,
-    campaign_id: String,
-    character_id: String,
+pub fn get_character_from_directory(
+    data_dir: &Path,
+    campaign_id: &str,
+    character_id: &str,
 ) -> Result<Character, String> {
-    Uuid::parse_str(&character_id)
-        .map_err(|_| "Identifiant de personnage invalide.".to_string())?;
+    Uuid::parse_str(character_id).map_err(|_| "Identifiant de personnage invalide.".to_string())?;
 
-    let directory = characters_dir(&app, &campaign_id)?;
+    let directory = characters_dir_from_data_dir(data_dir, campaign_id)?;
     let path = directory.join(format!("{character_id}.json"));
 
     if !path.is_file() {
@@ -293,6 +278,20 @@ pub fn get_character(
     }
 
     Ok(character)
+}
+
+#[tauri::command]
+pub fn get_character(
+    app: AppHandle,
+    campaign_id: String,
+    character_id: String,
+) -> Result<Character, String> {
+    let data_dir = app
+        .path()
+        .app_data_dir()
+        .map_err(|e| format!("Impossible de localiser les données : {e}"))?;
+
+    get_character_from_directory(&data_dir, &campaign_id, &character_id)
 }
 
 #[tauri::command]

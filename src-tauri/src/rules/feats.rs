@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use serde::{Deserialize, Serialize};
 
-use crate::rules::SkillId;
+use crate::rules::{SkillId, attributes::AttributeId, proficiencies::ProficiencyRank};
 
 use super::FeatId;
 
@@ -10,12 +10,18 @@ use super::FeatId;
 #[serde(rename_all = "camelCase")]
 pub struct FeatDefinition {
     pub id: FeatId,
+    #[serde(default = "default_level")]
+    pub level: u8,
     pub name: String,
     pub description: String,
     pub kind: FeatKind,
 
     #[serde(default)]
     pub prerequisites: Vec<FeatPrerequisite>,
+}
+
+fn default_level() -> u8 {
+    1
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -40,7 +46,7 @@ pub enum FeatPrerequisite {
         skill_id: SkillId,
 
         #[serde(default = "default_skill_rank")]
-        rank: SkillRank,
+        rank: ProficiencyRank,
     },
 
     Feat {
@@ -48,17 +54,64 @@ pub enum FeatPrerequisite {
     },
 }
 
-fn default_skill_rank() -> SkillRank {
-    SkillRank::Trained
+fn default_skill_rank() -> ProficiencyRank {
+    ProficiencyRank::Trained
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub enum SkillRank {
-    Trained,
-    Expert,
-    Master,
-    Legendary,
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(tag = "type", rename_all = "camelCase")]
+pub enum FeatEffect {
+    GrantAction {
+        action_id: String,
+    },
+
+    Modifier {
+        target: ModifierTarget,
+        value: i32,
+        condition: Option<String>,
+    },
+
+    Proficiency {
+        target: ProficiencyTarget,
+        rank: ProficiencyRank,
+    },
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(
+    tag = "type",
+    rename_all = "camelCase",
+    rename_all_fields = "camelCase"
+)]
+pub enum ModifierTarget {
+    Attribute { attribute: AttributeId },
+    Skill { skill_id: String },
+    Defense { defense: DefenseId },
+    Speed,
+    HitPoints,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum DefenseId {
+    ArmorClass,
+    Fortitude,
+    Reflex,
+    Will,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(
+    tag = "type",
+    rename_all = "camelCase",
+    rename_all_fields = "camelCase"
+)]
+pub enum ProficiencyTarget {
+    Skill { skill_id: String },
+    WeaponCategory { category_id: String },
+    ArmorCategory { category_id: String },
+    Perception,
+    SavingThrow { defense: DefenseId },
 }
 
 const FEATS_JSON: &str = include_str!("../../rules/feats.json");

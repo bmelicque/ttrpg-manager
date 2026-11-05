@@ -31,24 +31,41 @@ type StepZeroProps = {
 function StepZero({ start }: StepZeroProps) {
     return (
         <section class="creation-panel">
-            <h2>Tu préfères commencer par...</h2>
+            <h2>Commencer par...</h2>
 
             <div class="choice-grid">
-                <button onClick={() => start("class")}>
-                    <span>
-                        <span class="choice-icon">⚔️</span>
-                        <strong>La classe</strong>
-                    </span>
-                    <span>Quel sera ton rôle dans l'aventure ?</span>
-                </button>
-
-                <button onClick={() => start("species")}>
-                    <span class="choice-icon">🧬</span>
-                    <strong>L'espèce</strong>
-                    <span>À quel peuple appartiens-tu ?</span>
-                </button>
+                <FirstChoiceOption
+                    icon="⚔️"
+                    label="La classe"
+                    description="Quel sera ton rôle dans l'aventure ?"
+                    onClick={() => start("class")}
+                />
+                <FirstChoiceOption
+                    icon="🧬"
+                    label="L'espèce"
+                    description="À quel peuple appartiens-tu ?"
+                    onClick={() => start("species")}
+                />
             </div>
         </section>
+    );
+}
+
+type FirstChoiceOptionProps = {
+    onClick: () => void;
+    icon: string;
+    label: string;
+    description: string;
+};
+function FirstChoiceOption(props: FirstChoiceOptionProps) {
+    return (
+        <button onClick={props.onClick}>
+            <span class="choice-header">
+                <span class="choice-icon">{props.icon}</span>
+                <strong>{props.label}</strong>
+            </span>
+            <span>{props.description}</span>
+        </button>
     );
 }
 

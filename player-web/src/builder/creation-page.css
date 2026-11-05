@@ -158,6 +158,13 @@
   line-height: 1.6;
 }
 
+.choice-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
 .choice-icon {
   display: grid;
   width: 48px;

@@ -2,7 +2,12 @@ use std::collections::HashSet;
 
 use serde::{Deserialize, Serialize};
 
-use crate::rules::{FeatId, FeatureId, ItemId, SkillId, SubclassId, utils::validate_unique_ids};
+use crate::rules::{
+    FeatId, FeatureId, ItemId, SkillId, SubclassId,
+    attributes::{AttributeId, Attributes},
+    proficiencies::{ProficiencyRank, WeaponProficiency},
+    utils::validate_unique_ids,
+};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -20,7 +25,7 @@ pub struct ClassDefinition {
     /// Caractéristiques principales ou recommandées.
     pub key_attributes: Vec<AttributeId>,
 
-    pub attributes: ClassAttributes,
+    pub attributes: Attributes,
 
     pub proficiencies: ClassProficiencies,
 
@@ -48,37 +53,6 @@ pub struct ClassDefinition {
     pub quick_build: Option<String>,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-pub struct ClassAttributes {
-    pub strength: i8,
-    pub dexterity: i8,
-    pub constitution: i8,
-    pub intelligence: i8,
-    pub wisdom: i8,
-    pub charisma: i8,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub enum AttributeId {
-    Strength,
-    Dexterity,
-    Constitution,
-    Intelligence,
-    Wisdom,
-    Charisma,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "lowercase")]
-pub enum ProficiencyRank {
-    Untrained,
-    Trained,
-    Expert,
-    Master,
-    Legendary,
-}
-
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ClassProficiencies {
@@ -87,7 +61,7 @@ pub struct ClassProficiencies {
 
     /// Identifiants des catégories ou groupes d'armes maîtrisés.
     #[serde(default)]
-    pub weapons: Vec<RankedProficiency>,
+    pub weapons: Vec<WeaponRankedProficiency>,
 
     /// Identifiants des catégories ou groupes d'armures maîtrisés.
     #[serde(default)]
@@ -104,6 +78,13 @@ pub struct SavingThrowProficiencies {
     pub fortitude: ProficiencyRank,
     pub reflex: ProficiencyRank,
     pub will: ProficiencyRank,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct WeaponRankedProficiency {
+    pub id: WeaponProficiency,
+    pub rank: ProficiencyRank,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

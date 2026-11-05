@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use serde::{Deserialize, Serialize};
 
-use crate::rules::ItemId;
+use crate::rules::{ItemId, damage::DamageType};
 
 /// Définition d'un objet disponible dans le catalogue.
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -16,6 +16,14 @@ pub struct ItemDefinition {
 
     pub kind: ItemKind,
 }
+impl ItemDefinition {
+    pub fn hands(&self) -> u8 {
+        match &self.kind {
+            ItemKind::Weapon { hands_required, .. } => *hands_required,
+            _ => 0,
+        }
+    }
+}
 
 /// Nature de l'objet et propriétés spécifiques à cette catégorie.
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -26,14 +34,22 @@ pub struct ItemDefinition {
 )]
 pub enum ItemKind {
     Weapon {
-        /// Identifiant de catégorie utilisé pour les maîtrises.
-        category_id: String,
-
-        /// Nombre de mains nécessaires pour utiliser l'arme.
+        category_id: WeaponCategory,
         hands_required: u8,
+        damage_dice_size: u8,
+        damage_types: Vec<DamageType>,
 
-        /// Expression des dégâts, selon les conventions du système.
-        damage: String,
+        range: Option<u8>,
+        thrown: Option<u8>,
+        two_handed: Option<u8>,
+
+        // Traits
+        #[serde(default)]
+        deadly: bool,
+        #[serde(default)]
+        fatal: bool,
+        #[serde(default)]
+        finesse: bool,
     },
     Armor {
         /// Identifiant de catégorie utilisé pour les maîtrises.
@@ -46,6 +62,15 @@ pub enum ItemKind {
     },
     Consumable,
     Gear,
+}
+
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum WeaponCategory {
+    Simple,
+    Martial,
+    Exotic,
+    Unarmed,
 }
 
 const ITEMS_JSON: &str = include_str!("../../../rules/equipment/items.json");

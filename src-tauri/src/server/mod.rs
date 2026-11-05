@@ -8,8 +8,13 @@ use std::{path::PathBuf, sync::Arc};
 use tower_http::cors::{Any, CorsLayer};
 
 use crate::{
-    character::{Character, CreateCharacterRequest, create_character_in_directory},
+    character::{
+        Character, CreateCharacterRequest, calculated::CalculatedCharacter,
+        calculations::calculate_character, create_character_in_directory,
+        get_character_from_directory,
+    },
     rules::{
+        Rules,
         classes::{ClassDefinition, load_classes},
         equipment::{
             items::{ItemDefinition, load_items},
@@ -17,6 +22,7 @@ use crate::{
         },
         feats::{FeatDefinition, load_feats},
         heritages::{HeritageDefinition, load_heritages},
+        skills::{Skill, load_skills},
         species::{SpeciesDefinition, load_species},
         subclasses::{SubclassDefinition, load_subclasses},
     },
@@ -31,8 +37,19 @@ struct AppState {
     heritages: Arc<Vec<HeritageDefinition>>,
     items: Arc<Vec<ItemDefinition>>,
     equipment_kits: Arc<Vec<EquipmentKit>>,
+    skills: Arc<Vec<Skill>>,
 
     data_dir: PathBuf,
+}
+impl Into<Rules> for &AppState {
+    fn into(self) -> Rules {
+        Rules {
+            classes: self.classes.to_vec(),
+            species: self.species.to_vec(),
+            skills: self.skills.to_vec(),
+            items: self.items.to_vec(),
+        }
+    }
 }
 
 async fn health() -> &'static str {
@@ -86,6 +103,17 @@ async fn create_campaign_character(
     Ok(Json(character))
 }
 
+async fn get_campaign_character(
+    State(state): State<AppState>,
+    Path((campaign_id, character_id)): Path<(String, String)>,
+) -> Result<Json<CalculatedCharacter>, (StatusCode, String)> {
+    let character = get_character_from_directory(&state.data_dir, &campaign_id, &character_id)
+        .map_err(|error| (StatusCode::NOT_FOUND, error))?;
+    let character = calculate_character(&character, &(&state).into());
+
+    Ok(Json(character))
+}
+
 pub async fn run(data_dir: PathBuf) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let state = AppState {
         classes: Arc::new(load_classes()?),
@@ -95,6 +123,7 @@ pub async fn run(data_dir: PathBuf) -> Result<(), Box<dyn std::error::Error + Se
         heritages: Arc::new(load_heritages()?),
         items: Arc::new(load_items()?),
         equipment_kits: Arc::new(load_kits()?),
+        skills: Arc::new(load_skills()?),
 
         data_dir,
     };
@@ -116,6 +145,10 @@ pub async fn run(data_dir: PathBuf) -> Result<(), Box<dyn std::error::Error + Se
         .route(
             "/api/campaigns/{campaign_id}/characters",
             post(create_campaign_character),
+        )
+        .route(
+            "/api/campaigns/{campaign_id}/characters/{character_id}",
+            get(get_campaign_character),
         )
         .layer(cors)
         .with_state(state);

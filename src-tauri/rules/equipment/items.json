@@ -20,9 +20,13 @@
         "price": 20,
         "kind": {
             "type": "weapon",
-            "categoryId": "simple_weapons",
+            "categoryId": "simple",
             "handsRequired": 1,
-            "damage": "1d4 P ou T",
+            "damageDiceSize": 4,
+            "damageTypes": [
+                "piercing",
+                "slashing"
+            ],
             "agile": true,
             "finesse": true,
             "thrown": 2
@@ -35,9 +39,12 @@
         "price": 100,
         "kind": {
             "type": "weapon",
-            "categoryId": "martial_weapons",
+            "categoryId": "martial",
             "handsRequired": 2,
-            "damage": "1d8 T",
+            "damageDiceSize": 8,
+            "damageTypes": [
+                "slashing"
+            ],
             "deadly": true,
             "reach": true
         }
@@ -63,9 +70,13 @@
         "price": 100,
         "kind": {
             "type": "weapon",
-            "categoryId": "martial_weapons",
+            "categoryId": "martial",
             "handsRequired": 1,
-            "damage": "1d8 P ou T"
+            "damageDiceSize": 8,
+            "damageTypes": [
+                "piercing",
+                "slashing"
+            ]
         }
     },
     {
@@ -75,9 +86,12 @@
         "price": 200,
         "kind": {
             "type": "weapon",
-            "categoryId": "martial_weapons",
+            "categoryId": "martial",
             "handsRequired": 1,
-            "damage": "1d6 P",
+            "damageDiceSize": 6,
+            "damageTypes": [
+                "piercing"
+            ],
             "finesse": true,
             "deadly": true,
             "disarm": true
@@ -90,9 +104,12 @@
         "price": 100,
         "kind": {
             "type": "weapon",
-            "categoryId": "martial_weapons",
+            "categoryId": "martial",
             "handsRequired": 1,
-            "damage": "1d4 C",
+            "damageDiceSize": 4,
+            "damageTypes": [
+                "bludgeoning"
+            ],
             "agile": true,
             "ac": 2
         }

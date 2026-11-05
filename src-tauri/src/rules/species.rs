@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use serde::{Deserialize, Serialize};
 
-use crate::rules::{FeatureId, SkillId, classes::AttributeId};
+use crate::rules::{FeatureId, SkillId, attributes::AttributeId};
 
 pub type SpeciesId = String;
 pub type HeritageId = String;

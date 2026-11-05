@@ -1,0 +1,82 @@
+[
+    {
+        "id": "acrobatics",
+        "name": "Acrobaties",
+        "attribute": "dexterity"
+    },
+    {
+        "id": "arcana",
+        "name": "Arcanes",
+        "attribute": "intelligence"
+    },
+    {
+        "id": "athletics",
+        "name": "Athlétisme",
+        "attribute": "strength"
+    },
+    {
+        "id": "crafting",
+        "name": "Artisanat",
+        "attribute": "intelligence"
+    },
+    {
+        "id": "deception",
+        "name": "Duperie",
+        "attribute": "charisma"
+    },
+    {
+        "id": "diplomacy",
+        "name": "Diplomatie",
+        "attribute": "charisma"
+    },
+    {
+        "id": "intimidation",
+        "name": "Intimidation",
+        "attribute": "charisma"
+    },
+    {
+        "id": "medicine",
+        "name": "Médicine",
+        "attribute": "wisdom"
+    },
+    {
+        "id": "nature",
+        "name": "Nature",
+        "attribute": "wisdom"
+    },
+    {
+        "id": "occultism",
+        "name": "Occultisme",
+        "attribute": "intelligence"
+    },
+    {
+        "id": "performance",
+        "name": "Représentation",
+        "attribute": "charisma"
+    },
+    {
+        "id": "religion",
+        "name": "Religion",
+        "attribute": "wisdom"
+    },
+    {
+        "id": "society",
+        "name": "Société",
+        "attribute": "intelligence"
+    },
+    {
+        "id": "stealth",
+        "name": "Discrétion",
+        "attribute": "dexterity"
+    },
+    {
+        "id": "survival",
+        "name": "Survie",
+        "attribute": "wisdom"
+    },
+    {
+        "id": "thievery",
+        "name": "Larcin",
+        "attribute": "dexterity"
+    }
+]

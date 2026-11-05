@@ -14,6 +14,21 @@
         ]
     },
     {
+        "id": "courageous_anthem",
+        "name": "Hymne du courage",
+        "description": "Vous inspirez vos alliés et vous-même par un hymne encourageant. Vous et tous vos alliés dans la zone obtenez avantage de +1 aux jets d'attaque, aux jets de dégâts et contre la peur.",
+        "kind": {
+            "type": "classFeature",
+            "id": "bard"
+        },
+        "effects": [
+            {
+                "type": "grantAction",
+                "actionId": "courageous_anthem"
+            }
+        ]
+    },
+    {
         "id": "double_slice",
         "name": "Double entaille",
         "description": "**Conditions** Vous maniez une arme de corps-à-corps dans chaque main.\n\nEffectuez une Frappe avec chacune de vos armes sur une même cible.",
