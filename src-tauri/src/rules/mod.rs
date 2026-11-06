@@ -21,5 +21,7 @@ pub struct Rules {
     pub classes: Vec<classes::ClassDefinition>,
     pub species: Vec<species::SpeciesDefinition>,
     pub skills: Vec<skills::Skill>,
+    pub feats: Vec<feats::FeatDefinition>,
     pub items: Vec<equipment::items::ItemDefinition>,
+    pub actions: Vec<actions::Action>,
 }

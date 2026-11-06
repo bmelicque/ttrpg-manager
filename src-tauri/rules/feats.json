@@ -15,7 +15,7 @@
     },
     {
         "id": "courageous_anthem",
-        "name": "Hymne du courage",
+        "name": "Hymne courageux",
         "description": "Vous inspirez vos alliés et vous-même par un hymne encourageant. Vous et tous vos alliés dans la zone obtenez avantage de +1 aux jets d'attaque, aux jets de dégâts et contre la peur.",
         "kind": {
             "type": "classFeature",

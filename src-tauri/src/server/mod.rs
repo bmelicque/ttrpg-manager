@@ -15,6 +15,7 @@ use crate::{
     },
     rules::{
         Rules,
+        actions::{Action, load_actions},
         classes::{ClassDefinition, load_classes},
         equipment::{
             items::{ItemDefinition, load_items},
@@ -38,6 +39,7 @@ struct AppState {
     items: Arc<Vec<ItemDefinition>>,
     equipment_kits: Arc<Vec<EquipmentKit>>,
     skills: Arc<Vec<Skill>>,
+    actions: Arc<Vec<Action>>,
 
     data_dir: PathBuf,
 }
@@ -47,7 +49,9 @@ impl Into<Rules> for &AppState {
             classes: self.classes.to_vec(),
             species: self.species.to_vec(),
             skills: self.skills.to_vec(),
+            feats: self.feats.to_vec(),
             items: self.items.to_vec(),
+            actions: self.actions.to_vec(),
         }
     }
 }
@@ -82,6 +86,10 @@ async fn list_items(State(state): State<AppState>) -> Json<Vec<ItemDefinition>> 
 
 async fn list_equipment_kits(State(state): State<AppState>) -> Json<Vec<EquipmentKit>> {
     Json((*state.equipment_kits).clone())
+}
+
+async fn list_actions(State(state): State<AppState>) -> Json<Vec<Action>> {
+    Json((*state.actions).clone())
 }
 
 async fn create_campaign_character(
@@ -124,6 +132,7 @@ pub async fn run(data_dir: PathBuf) -> Result<(), Box<dyn std::error::Error + Se
         items: Arc::new(load_items()?),
         equipment_kits: Arc::new(load_kits()?),
         skills: Arc::new(load_skills()?),
+        actions: Arc::new(load_actions()?),
 
         data_dir,
     };

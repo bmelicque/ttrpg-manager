@@ -17,6 +17,9 @@ pub struct FeatDefinition {
     pub kind: FeatKind,
 
     #[serde(default)]
+    pub effects: Vec<FeatEffect>,
+
+    #[serde(default)]
     pub prerequisites: Vec<FeatPrerequisite>,
 }
 
@@ -59,7 +62,11 @@ fn default_skill_rank() -> ProficiencyRank {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(tag = "type", rename_all = "camelCase")]
+#[serde(
+    tag = "type",
+    rename_all = "camelCase",
+    rename_all_fields = "camelCase"
+)]
 pub enum FeatEffect {
     GrantAction {
         action_id: String,
@@ -75,6 +82,14 @@ pub enum FeatEffect {
         target: ProficiencyTarget,
         rank: ProficiencyRank,
     },
+}
+impl FeatEffect {
+    pub fn as_grant_action(&self) -> Option<&String> {
+        match self {
+            FeatEffect::GrantAction { action_id } => Some(action_id),
+            _ => None,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

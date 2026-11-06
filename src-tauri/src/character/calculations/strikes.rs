@@ -2,7 +2,7 @@ use crate::{
     character::{Character, calculated::CalculatedAction, calculations::common::get_class},
     rules::{
         Rules,
-        actions::ActionCost,
+        actions::{ActionCategory, ActionCost},
         attributes::Attributes,
         classes::ClassDefinition,
         damage::DamageType,
@@ -51,10 +51,12 @@ impl Into<CalculatedAction> for Strike {
         );
 
         CalculatedAction {
+            category: ActionCategory::Strike,
             name,
-            action_cost: ActionCost::One,
+            cost: ActionCost::One,
             modifier: Some(self.modifier),
             range: self.type_.range(),
+            area: None,
             description,
         }
     }

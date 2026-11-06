@@ -59,7 +59,9 @@
                 "abilityModifier": "intelligence"
             }
         },
-        "featureIds": [],
+        "featureIds": [
+            "courageous_anthem"
+        ],
         "subclassIds": [],
         "availableFeatIds": [],
         "equipmentSuggestions": [

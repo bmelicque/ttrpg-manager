@@ -1,6 +1,18 @@
 [
     {
+        "id": "courageous_anthem",
+        "category": "composition",
+        "name": "Hymne courageux",
+        "cost": "one",
+        "area": {
+            "type": "emanation",
+            "radius": 12
+        },
+        "description": "Vous inspirez vos alliés et vous-même par un hymne encourageant. Vous et tous vos alliés dans la zone obtenez avantage de +1 aux jets d'attaque, aux jets de dégâts et contre la peur."
+    },
+    {
         "id": "swashbuckler_strike",
+        "category": "strike",
         "name": "Frappe assurée",
         "description": "",
         "kind": {
@@ -21,10 +33,12 @@
                 },
                 {
                     "type": "onFailure",
-                    "effect": {
-                        "type": "extraDice",
-                        "count": 1
-                    }
+                    "effects": [
+                        {
+                            "type": "extraDice",
+                            "count": 1
+                        }
+                    ]
                 }
             ]
         }

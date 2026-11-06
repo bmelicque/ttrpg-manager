@@ -5,7 +5,10 @@ use serde::{Deserialize, Serialize};
 use crate::{
     character::Attributes,
     rules::{
-        SkillId, actions::ActionCost, attributes::AttributeId, proficiencies::ProficiencyRank,
+        SkillId,
+        actions::{ActionCategory, ActionCost, Area},
+        attributes::AttributeId,
+        proficiencies::ProficiencyRank,
     },
 };
 
@@ -43,9 +46,11 @@ pub struct CalculatedProficiency {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CalculatedAction {
+    pub category: ActionCategory,
     pub name: String,
-    pub action_cost: ActionCost,
+    pub cost: ActionCost,
     pub modifier: Option<i8>,
     pub range: Option<u8>,
+    pub area: Option<Area>,
     pub description: String,
 }
