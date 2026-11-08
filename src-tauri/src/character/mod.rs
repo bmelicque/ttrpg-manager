@@ -10,7 +10,13 @@ use serde::{Deserialize, Serialize};
 use tauri::{AppHandle, Manager};
 use uuid::Uuid;
 
-use crate::rules::{ItemId, attributes::Attributes, proficiencies::ProficiencyRank};
+use crate::{
+    character::calculations::{get_class, get_species},
+    rules::{
+        ItemId, attributes::Attributes, classes::ClassDefinition, heritages::HeritageDefinition,
+        proficiencies::ProficiencyRank, species::SpeciesDefinition,
+    },
+};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -98,6 +104,17 @@ pub struct CharacterState {
     pub current_focus_points: u32,
 }
 
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CharacterSummary {
+    pub id: String,
+    pub name: String,
+    pub level: u32,
+    pub portrait: Option<String>,
+    pub species_name: String,
+    pub class_name: String,
+}
+
 pub fn characters_dir_from_data_dir(data_dir: &Path, campaign_id: &str) -> Result<PathBuf, String> {
     Uuid::parse_str(campaign_id).map_err(|_| "Identifiant de campagne invalide.".to_string())?;
 
@@ -131,9 +148,7 @@ fn read_character(path: &Path) -> Result<Character, String> {
     serde_json::from_str(&contents).map_err(|e| format!("Fichier de personnage invalide : {e}"))
 }
 
-#[tauri::command]
-pub fn list_characters(app: AppHandle, campaign_id: String) -> Result<Vec<Character>, String> {
-    let directory = characters_dir(&app, &campaign_id)?;
+pub fn list_characters_in_directory(directory: &Path) -> Result<Vec<Character>, String> {
     let entries =
         fs::read_dir(directory).map_err(|e| format!("Impossible de lire les personnages : {e}"))?;
 
@@ -153,6 +168,31 @@ pub fn list_characters(app: AppHandle, campaign_id: String) -> Result<Vec<Charac
     characters.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
 
     Ok(characters)
+}
+
+pub fn summarize_character(
+    character: Character,
+    classes: &[ClassDefinition],
+    species: &[SpeciesDefinition],
+) -> CharacterSummary {
+    let class = get_class(&character, classes);
+    let species = get_species(&character, species);
+
+    CharacterSummary {
+        id: character.id,
+        name: character.name,
+        level: character.level,
+        portrait: character.portrait,
+        species_name: species.name.clone(),
+        class_name: class.name.clone(),
+    }
+}
+
+#[tauri::command]
+pub fn list_characters(app: AppHandle, campaign_id: String) -> Result<Vec<Character>, String> {
+    let directory = characters_dir(&app, &campaign_id)?;
+
+    list_characters_in_directory(&directory)
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

@@ -9,9 +9,10 @@ use tower_http::cors::{Any, CorsLayer};
 
 use crate::{
     character::{
-        Character, CreateCharacterRequest, calculated::CalculatedCharacter,
-        calculations::calculate_character, create_character_in_directory,
-        get_character_from_directory,
+        Character, CharacterSummary, CreateCharacterRequest, calculated::CalculatedCharacter,
+        calculations::calculate_character, characters_dir_from_data_dir,
+        create_character_in_directory, get_character_from_directory, list_characters_in_directory,
+        summarize_character,
     },
     rules::{
         Rules,
@@ -111,6 +112,22 @@ async fn create_campaign_character(
     Ok(Json(character))
 }
 
+async fn list_campaign_characters(
+    State(state): State<AppState>,
+    Path(campaign_id): Path<String>,
+) -> Result<Json<Vec<CharacterSummary>>, (StatusCode, String)> {
+    let directory = characters_dir_from_data_dir(&state.data_dir, &campaign_id)
+        .map_err(|e| (StatusCode::BAD_REQUEST, e))?;
+
+    let characters = list_characters_in_directory(&directory)
+        .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e))?
+        .into_iter()
+        .map(|character| summarize_character(character, &state.classes, &state.species))
+        .collect();
+
+    Ok(Json(characters))
+}
+
 async fn get_campaign_character(
     State(state): State<AppState>,
     Path((campaign_id, character_id)): Path<(String, String)>,
@@ -151,6 +168,10 @@ pub async fn run(data_dir: PathBuf) -> Result<(), Box<dyn std::error::Error + Se
         .route("/api/rules/heritages", get(list_heritages))
         .route("/api/rules/items", get(list_items))
         .route("/api/rules/equipment-kits", get(list_equipment_kits))
+        .route(
+            "/api/campaigns/{campaign_id}/characters",
+            get(list_campaign_characters),
+        )
         .route(
             "/api/campaigns/{campaign_id}/characters",
             post(create_campaign_character),

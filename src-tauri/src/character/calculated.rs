@@ -14,6 +14,7 @@ use crate::{
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CalculatedCharacter {
+    pub id: String,
     // Identity
     pub name: String,
 
@@ -38,6 +39,7 @@ pub struct CalculatedSaves {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct CalculatedProficiency {
     pub rank: ProficiencyRank,
     pub attribute_id: AttributeId,

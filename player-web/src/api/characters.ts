@@ -1,25 +1,12 @@
 import { API_URL } from "../../../shared/api/rules";
+import {
+    calculatedCharacterSchema,
+    characterSummarySchema,
+} from "../../../shared/schemas/character";
 import type { InventoryEntry } from "../../../shared/schemas/inventory";
 import { getCampaignId } from "../lib/campaign";
 import type { CharacterDraft } from "../types";
-
-type CreateCharacterRequest = {
-    name: string;
-    level: number;
-    biography: string;
-
-    attributes: Attributes;
-
-    speciesId: string;
-    heritageId: string | null;
-    classId: string;
-    subclassId: string | null;
-
-    skillIds: string[];
-    featIds: string[];
-
-    inventory: InventoryEntry[];
-};
+import { z } from "zod";
 
 type Attributes = {
     strength: number;
@@ -30,14 +17,33 @@ type Attributes = {
     charisma: number;
 };
 
+type CreateCharacterRequest = {
+    name: string;
+    level: number;
+    biography: string;
+    attributes: Attributes;
+    speciesId: string;
+    heritageId: string | null;
+    classId: string;
+    subclassId: string | null;
+    skillIds: string[];
+    featIds: string[];
+    inventory: InventoryEntry[];
+};
+
 function draftToRequest(
     draft: CharacterDraft,
     attributes: Attributes,
 ): CreateCharacterRequest {
     if (!draft.speciesId) throw new Error("Species ID is required");
     if (!draft.classId) throw new Error("Class ID is required");
-    const featIds = [];
-    if (draft.skillFeatId) featIds.push(draft.skillFeatId);
+
+    const featIds: string[] = [];
+
+    if (draft.skillFeatId) {
+        featIds.push(draft.skillFeatId);
+    }
+
     return {
         name: draft.name,
         level: draft.level,
@@ -53,9 +59,40 @@ function draftToRequest(
     };
 }
 
-export function postCharacter(draft: CharacterDraft, attributes: Attributes) {
+async function handleResponse<T extends z.ZodType>(
+    response: Response,
+    schema: T,
+): Promise<z.infer<T>> {
+    if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message || `Erreur HTTP ${response.status}`);
+    }
+
+    return response.json().then((r) => schema.parse(r));
+}
+
+function campaignCharactersUrl() {
     const campaignId = getCampaignId();
-    return fetch(`${API_URL}/api/campaigns/${campaignId}/characters`, {
+    return `${API_URL}/api/campaigns/${campaignId}/characters`;
+}
+
+export async function listCampaignCharacters() {
+    const response = await fetch(campaignCharactersUrl());
+
+    return handleResponse(response, z.array(characterSummarySchema));
+}
+
+export async function getCampaignCharacter(characterId: string) {
+    const response = await fetch(`${campaignCharactersUrl()}/${characterId}`);
+
+    return handleResponse(response, calculatedCharacterSchema);
+}
+
+export async function postCharacter(
+    draft: CharacterDraft,
+    attributes: Attributes,
+) {
+    return await fetch(campaignCharactersUrl(), {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

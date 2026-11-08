@@ -1,27 +1,36 @@
 import { postCharacter } from "../api/characters";
-import { useDraft } from "../contexts/useDraft";
-import { useSteps, type Step } from "../contexts/useSteps";
-import { CharacterSummary } from "./CharacterSummary";
-import ClassSelection from "./ClassSelection";
-import "./creation-page.css";
-import EquipmentSelection from "./EquipmentSelection";
-import { IdentitySelection } from "./IdentitySelection";
-import SkillSelection from "./SkillSelection";
-import SpeciesSelection from "./SpeciesSelection";
-import { useAttributes } from "./useAttributes";
+import { CharacterDraftProvider, useDraft } from "../contexts/useDraft";
+import { StepsProvider, useSteps, type Step } from "../contexts/useSteps";
+import { CharacterSummary } from "../builder/CharacterSummary";
+import ClassSelection from "../builder/ClassSelection";
+import EquipmentSelection from "../builder/EquipmentSelection";
+import { IdentitySelection } from "../builder/IdentitySelection";
+import SkillSelection from "../builder/SkillSelection";
+import SpeciesSelection from "../builder/SpeciesSelection";
+import { useAttributes } from "../builder/useAttributes";
+
+import "../builder/creation-page.css";
 
 export default function () {
     const { startingPoint, start } = useSteps();
 
     return (
-        <main class="creation-page">
-            <header class="creation-header">
-                <p class="eyebrow">CRÉATION DE PERSONNAGE</p>
-                <h1>Nouveau personnage</h1>
-            </header>
+        <CharacterDraftProvider>
+            <StepsProvider>
+                <main class="creation-page">
+                    <header class="creation-header">
+                        <p class="eyebrow">CRÉATION DE PERSONNAGE</p>
+                        <h1>Nouveau personnage</h1>
+                    </header>
 
-            {startingPoint === null ? <StepZero start={start} /> : <Steps />}
-        </main>
+                    {startingPoint === null ? (
+                        <StepZero start={start} />
+                    ) : (
+                        <Steps />
+                    )}
+                </main>
+            </StepsProvider>
+        </CharacterDraftProvider>
     );
 }
 

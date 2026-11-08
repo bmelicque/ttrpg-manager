@@ -224,7 +224,7 @@ fn hands_count(items: &[ItemDefinition]) -> u8 {
 }
 
 fn calculate_weapon_proficiencies(character: &Character, rules: &Rules) -> WeaponProficiencies {
-    let class = get_class(character, rules);
+    let class = get_class(character, &rules.classes);
     WeaponProficiencies {
         simple: get_weapon_proficiency(class, WeaponProficiency::SimpleWeapons),
         martial: get_weapon_proficiency(class, WeaponProficiency::MartialWeapons),

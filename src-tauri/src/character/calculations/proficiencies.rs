@@ -15,7 +15,7 @@ use crate::{
 };
 
 pub fn calculate_proficiencies(character: &Character, rules: &Rules) -> CalculatedProficiencies {
-    let class_proficiencies = &get_class(character, rules).proficiencies;
+    let class_proficiencies = &get_class(character, &rules.classes).proficiencies;
     let perception = calculate_proficiency(
         class_proficiencies.perception,
         AttributeId::Wisdom,
@@ -90,11 +90,11 @@ fn get_skill_proficiency_ranks(
     character: &Character,
     rules: &Rules,
 ) -> HashMap<SkillId, ProficiencyRank> {
-    get_class(character, rules)
+    get_class(character, &rules.classes)
         .skills
         .fixed
         .iter()
-        .chain(&get_species(character, rules).skills.fixed)
+        .chain(&get_species(character, &rules.species).skills.fixed)
         .map(|skill| (skill.clone(), ProficiencyRank::Trained))
         .chain(
             character

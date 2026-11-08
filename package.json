@@ -15,6 +15,7 @@
     "dompurify": "^3.4.17",
     "marked": "^18.1.2",
     "preact": "^10.25.1",
+    "preact-iso": "^2.12.2",
     "zod": "^4.6.7"
   },
   "devDependencies": {

@@ -12,6 +12,8 @@ use crate::{
     rules::{Rules, attributes::Attributes},
 };
 
+pub use self::common::{get_class, get_species};
+
 pub fn calculate_character(character: &Character, rules: &Rules) -> CalculatedCharacter {
     let name = character.name.clone();
 
@@ -21,6 +23,7 @@ pub fn calculate_character(character: &Character, rules: &Rules) -> CalculatedCh
     let actions = calculate_actions(character, rules, &attributes);
 
     CalculatedCharacter {
+        id: character.id.clone(),
         name,
         attributes,
         proficiencies,
